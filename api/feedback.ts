@@ -109,9 +109,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     "Signal Strength": {
       select: { name: signalStrength }
     },
-    "date:Submitted:start": {
-      date: { start: new Date().toISOString().split("T")[0] }
-    },
+    "Submitted": {
+  date: { start: new Date().toISOString().split("T")[0] }
+}
   };
 
   // What Resonated: the chips they tapped
