@@ -27,7 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     cardMode, semanticIntent,
     cardAccuracy, contextualSelections, contextualText,
     interruptionFrequency, orientationTime, privacyComfort,
-    email,
+    email, intention,
   } = req.body;
 
   const accuracyMap: Record<string, string> = {
@@ -64,11 +64,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     "quick-ping": "Quick ping",
   };
 
-  // Determine signal strength
+  // Determine signal strength (intention overrides accuracy-based scoring)
   let signalStrength = "None";
-  if (cardAccuracy === "exactly" && (interruptionFrequency === "6-10" || interruptionFrequency === "10-plus")) {
+  const intentionList = intention || [];
+  const hasHighIntent = intentionList.includes("design-partner") || intentionList.includes("builder");
+  const hasModerateIntent = intentionList.includes("advisor") || intentionList.includes("fan");
+
+  if (hasHighIntent) {
+    signalStrength = "Strong";
+  } else if (cardAccuracy === "exactly" && (interruptionFrequency === "6-10" || interruptionFrequency === "10-plus")) {
     signalStrength = "Strong";
   } else if (cardAccuracy === "exactly") {
+    signalStrength = "Moderate";
+  } else if (hasModerateIntent && cardAccuracy !== "not-really") {
     signalStrength = "Moderate";
   } else if (cardAccuracy === "close" && (interruptionFrequency === "6-10" || interruptionFrequency === "10-plus")) {
     signalStrength = "Moderate";
@@ -86,6 +94,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     freeTextParts.push(`Selections: ${contextualSelections.join(", ")}`);
   }
   if (contextualText) freeTextParts.push(`Comment: ${contextualText}`);
+  if (intentionList.length > 0) freeTextParts.push(`Intention: ${intentionList.join(", ")}`);
   const freeText = freeTextParts.join(" | ");
 
   // Build Notion properties
@@ -130,6 +139,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   if (email) {
     properties["Email"] = { email: email };
+  }
+  if (intentionList.length > 0) {
+    properties["Intention"] = {
+      rich_text: [{ text: { content: intentionList.join(", ") } }]
+    };
   }
 
   try {

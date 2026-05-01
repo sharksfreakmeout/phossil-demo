@@ -187,8 +187,6 @@ export default function Demo() {
   const [error, setError] = useState<string | null>(null);
   const [lastSituation, setLastSituation] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
-  const [email, setEmail] = useState("");
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
 
   function handleRoleSelect(roleId: string) {
     setSelectedRole(roleId);
@@ -222,7 +220,6 @@ export default function Demo() {
   }
 
   async function handleFeedbackSubmit(feedbackData: FeedbackData) {
-    console.log("Feedback received:", feedbackData);
     setFeedbackSubmitted(true);
 
     const roleName = getRoleName(selectedRole, customRole);
@@ -244,27 +241,6 @@ export default function Demo() {
     }
   }
 
-  async function handleEmailSubmit() {
-    if (!email.includes("@")) return;
-    setEmailSubmitted(true);
-
-    const roleName = getRoleName(selectedRole, customRole);
-
-    try {
-      await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          role: roleName,
-          company: companyOrIndustry,
-          email: email,
-        }),
-      });
-    } catch (err) {
-      console.error("Failed to save email:", err);
-    }
-  }
-
   function reset() {
     setStep("role");
     setSelectedRole(null);
@@ -276,8 +252,6 @@ export default function Demo() {
     setCard(null);
     setLastSituation("");
     setFeedbackSubmitted(false);
-    setEmail("");
-    setEmailSubmitted(false);
     setError(null);
   }
 
@@ -442,25 +416,20 @@ export default function Demo() {
             <RecoveryCard data={card} showAnnotations={true} showFeedback={true} onFeedbackSubmit={handleFeedbackSubmit} />
           </div>
 
-          {feedbackSubmitted && !emailSubmitted && (
-            <div style={{ textAlign: "center", padding: "24px 32px", marginBottom: 32, borderRadius: 12, border: "1px solid var(--border)", backgroundColor: "var(--bg-elevated)" }}>
-              <p style={{ fontFamily: "var(--font-display)", fontSize: 20, color: "var(--text-primary)", marginBottom: 4 }}>Want to see this for your real work?</p>
-              <p style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 16 }}>We're looking for founding design partners to shape the product. Leave your email and we'll reach out.</p>
-              <div style={{ display: "flex", gap: 8, maxWidth: 380, margin: "0 auto" }}>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com"
-                  style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid var(--border)", backgroundColor: "var(--bg)", color: "var(--text-primary)", fontSize: 14, fontFamily: "var(--font-body)", outline: "none" }}
-                  onKeyDown={(e) => { if (e.key === "Enter") handleEmailSubmit(); }}
-                />
-                <button onClick={handleEmailSubmit}
-                  style={{ padding: "10px 20px", borderRadius: 8, border: "none", cursor: "pointer", backgroundColor: "var(--text-primary)", color: "var(--bg)", fontSize: 14, fontWeight: 600 }}
-                >Sign up</button>
-              </div>
+          {feedbackSubmitted && (
+            <div style={{ textAlign: "center", padding: "20px 32px", marginBottom: 32, borderRadius: 12, border: "1px solid rgba(46,158,90,0.2)", backgroundColor: "var(--success-soft)" }}>
+              <p style={{ color: "var(--success)", fontSize: 15, fontWeight: 500, margin: 0 }}>You're in. We'll be in touch soon.</p>
             </div>
           )}
 
-          {emailSubmitted && (
-            <div style={{ textAlign: "center", padding: "20px 32px", marginBottom: 32, borderRadius: 12, border: "1px solid rgba(46,158,90,0.2)", backgroundColor: "var(--success-soft)" }}>
-              <p style={{ color: "var(--success)", fontSize: 15, fontWeight: 500 }}>You're on the list. We'll be in touch soon.</p>
+          {/* Persistent escape hatch for high-intent visitors who skip feedback */}
+          {!feedbackSubmitted && (
+            <div style={{ textAlign: "center", marginBottom: 24 }}>
+              <a href="https://calendar.app.google/685uNiinuYMrmzVTA" target="_blank" rel="noopener noreferrer"
+                style={{ color: "var(--accent)", fontSize: 13, textDecoration: "none" }}
+                onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
+              >Want to skip the survey and just talk? Book a call.</a>
             </div>
           )}
 

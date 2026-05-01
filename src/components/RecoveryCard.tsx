@@ -126,6 +126,8 @@ export interface FeedbackData {
   interruptionFrequency: string | null;
   orientationTime: string | null;
   privacyComfort: string | null;
+  email: string;
+  intention: string[];
 }
 
 interface RecoveryCardProps {
@@ -143,13 +145,15 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
   const progressTotal = (data.progress || []).length;
 
   // Feedback state
-  const [feedbackStep, setFeedbackStep] = useState<"initial" | "contextual" | "demographics" | "done">("initial");
+  const [feedbackStep, setFeedbackStep] = useState<"initial" | "contextual" | "demographics" | "connect" | "done">("initial");
   const [cardAccuracy, setCardAccuracy] = useState<string | null>(null);
   const [contextualSelections, setContextualSelections] = useState<string[]>([]);
   const [contextualText, setContextualText] = useState("");
   const [interruptionFrequency, setInterruptionFrequency] = useState<string | null>(null);
   const [orientationTime, setOrientationTime] = useState<string | null>(null);
   const [privacyComfort, setPrivacyComfort] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [intention, setIntention] = useState<string[]>([]);
 
   // Conversational interface state
   const [expandedPrompt, setExpandedPrompt] = useState<number | null>(null);
@@ -169,9 +173,12 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
   }
   function handleSubmit() {
     if (onFeedbackSubmit) {
-      onFeedbackSubmit({ cardMode: data.mode, semanticIntent: data.semanticIntent, cardAccuracy, contextualSelections, contextualText, interruptionFrequency, orientationTime, privacyComfort });
+      onFeedbackSubmit({ cardMode: data.mode, semanticIntent: data.semanticIntent, cardAccuracy, contextualSelections, contextualText, interruptionFrequency, orientationTime, privacyComfort, email, intention });
     }
     setFeedbackStep("done");
+  }
+  function toggleIntention(id: string) {
+    setIntention(prev => prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]);
   }
 
   async function handleChatSubmit() {
@@ -653,11 +660,51 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                   </div>
                 </div>
 
+                <button onClick={() => setFeedbackStep("connect")}
+                  style={{ width: "100%", padding: "10px 16px", borderRadius: 8, border: "none", cursor: "pointer", backgroundColor: "rgba(250,204,21,0.15)", color: "#FACC15", fontSize: 13, fontWeight: 600, transition: "all 0.15s ease" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(250,204,21,0.25)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(250,204,21,0.15)"; }}
+                >Next</button>
+              </div>
+            )}
+
+            {/* Step 4: Connect */}
+            {feedbackStep === "connect" && (
+              <div>
+                <p style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.85)", marginBottom: 4, textAlign: "center" }}>Want to stay connected?</p>
+                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginBottom: 14, textAlign: "center" }}>Pick what fits. No pressure.</p>
+
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+                  {[
+                    { id: "design-partner", label: "I want to help shape this product" },
+                    { id: "feedback-only", label: "Just sharing feedback" },
+                    { id: "advisor", label: "I'd advise on this" },
+                    { id: "builder", label: "I might want to build this with you" },
+                    { id: "fan", label: "Just a fan, keep me posted" },
+                  ].map((o) => { const s = intention.includes(o.id); return (
+                    <button key={o.id} onClick={() => toggleIntention(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: s ? "rgba(29,158,117,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: s ? "rgba(29,158,117,0.1)" : "rgba(255,255,255,0.02)", color: s ? "#5DCAA5" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease", textAlign: "left" }}>{o.label}</button>
+                  ); })}
+                </div>
+
+                {intention.length > 0 && !intention.every(i => i === "feedback-only") && (
+                  <div style={{ marginBottom: 14 }}>
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com"
+                      style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.8)", fontSize: 13, fontFamily: "var(--font-body)", outline: "none", boxSizing: "border-box" }}
+                      onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(29,158,117,0.3)"; }}
+                      onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
+                    />
+                  </div>
+                )}
+
                 <button onClick={handleSubmit}
                   style={{ width: "100%", padding: "10px 16px", borderRadius: 8, border: "none", cursor: "pointer", backgroundColor: "rgba(250,204,21,0.15)", color: "#FACC15", fontSize: 13, fontWeight: 600, transition: "all 0.15s ease" }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(250,204,21,0.25)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(250,204,21,0.15)"; }}
-                >Submit feedback</button>
+                >Submit</button>
+
+                <button onClick={handleSubmit}
+                  style={{ width: "100%", padding: 8, marginTop: 6, background: "none", border: "none", color: "rgba(255,255,255,0.25)", fontSize: 11, cursor: "pointer" }}
+                >Skip and finish</button>
               </div>
             )}
 
