@@ -64,12 +64,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     "quick-ping": "Quick ping",
   };
 
-  // Determine signal strength (intention overrides accuracy-based scoring)
-  let signalStrength = "None";
+  const intentionMap: Record<string, string> = {
+    "design-partner": "Design Partner",
+    "feedback-only": "Feedback Only",
+    "advisor": "Advisor",
+    "builder": "Builder",
+    "fan": "Fan",
+  };
+
+  // Determine signal strength
   const intentionList = intention || [];
   const hasHighIntent = intentionList.includes("design-partner") || intentionList.includes("builder");
   const hasModerateIntent = intentionList.includes("advisor") || intentionList.includes("fan");
 
+  let signalStrength = "None";
   if (hasHighIntent) {
     signalStrength = "Strong";
   } else if (cardAccuracy === "exactly" && (interruptionFrequency === "6-10" || interruptionFrequency === "10-plus")) {
@@ -78,24 +86,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     signalStrength = "Moderate";
   } else if (hasModerateIntent && cardAccuracy !== "not-really") {
     signalStrength = "Moderate";
-  } else if (cardAccuracy === "close" && (interruptionFrequency === "6-10" || interruptionFrequency === "10-plus")) {
-    signalStrength = "Moderate";
   } else if (cardAccuracy === "close") {
     signalStrength = "Moderate";
   } else if (cardAccuracy === "not-really") {
     signalStrength = "Weak";
   }
-
-  // Build free text from contextual data
-  const freeTextParts: string[] = [];
-  if (semanticIntent) freeTextParts.push(`Card showed: "${semanticIntent}"`);
-  if (cardMode) freeTextParts.push(`Mode: ${cardMode}`);
-  if (contextualSelections && contextualSelections.length > 0) {
-    freeTextParts.push(`Selections: ${contextualSelections.join(", ")}`);
-  }
-  if (contextualText) freeTextParts.push(`Comment: ${contextualText}`);
-  if (intentionList.length > 0) freeTextParts.push(`Intention: ${intentionList.join(", ")}`);
-  const freeText = freeTextParts.join(" | ");
 
   // Build Notion properties
   const properties: Record<string, unknown> = {
@@ -111,16 +106,37 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     "Tools": {
       rich_text: [{ text: { content: (tools || []).join(", ") } }]
     },
-    "Free Text": {
-      rich_text: [{ text: { content: freeText.substring(0, 2000) } }]
-    },
     "Signal Strength": {
       select: { name: signalStrength }
     },
-   "date:Submitted:start": {
+    "date:Submitted:start": {
       date: { start: new Date().toISOString().split("T")[0] }
     },
   };
+
+  // What Resonated: the chips they tapped
+  if (contextualSelections && contextualSelections.length > 0) {
+    properties["What Resonated"] = {
+      rich_text: [{ text: { content: contextualSelections.join(", ") } }]
+    };
+  }
+
+  // Comment: their typed feedback
+  if (contextualText) {
+    properties["Comment"] = {
+      rich_text: [{ text: { content: contextualText.substring(0, 2000) } }]
+    };
+  }
+
+  // Free Text: card context (what we showed them, for our reference)
+  const freeTextParts: string[] = [];
+  if (semanticIntent) freeTextParts.push(`Card: "${semanticIntent}"`);
+  if (cardMode) freeTextParts.push(`Mode: ${cardMode}`);
+  if (freeTextParts.length > 0) {
+    properties["Free Text"] = {
+      rich_text: [{ text: { content: freeTextParts.join(" | ") } }]
+    };
+  }
 
   if (situation && situationMap[situation]) {
     properties["Situation"] = { select: { name: situationMap[situation] } };
@@ -140,10 +156,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (email) {
     properties["Email"] = { email: email };
   }
+
+  // Intention: multi-select
   if (intentionList.length > 0) {
-    properties["Intention"] = {
-      rich_text: [{ text: { content: intentionList.join(", ") } }]
-    };
+    const mapped = intentionList
+      .map((i: string) => intentionMap[i])
+      .filter(Boolean)
+      .map((name: string) => ({ name }));
+    if (mapped.length > 0) {
+      properties["Intention"] = { multi_select: mapped };
+    }
   }
 
   try {
