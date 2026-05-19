@@ -6,23 +6,25 @@ function App() {
       {/* Nav */}
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        padding: "16px 24px", backgroundColor: "rgba(250,250,248,0.9)",
-        backdropFilter: "blur(12px)", borderBottom: "1px solid var(--border)",
+        padding: "16px 24px",
+        backgroundColor: "rgba(10, 13, 18, 0.85)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid var(--border)",
       }}>
-        <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{
-              width: 28, height: 28, borderRadius: 7,
-              background: "linear-gradient(135deg, #3B82F6, #6366F1)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 13, color: "#fff", fontWeight: 700,
-            }}>P</div>
-            <span style={{ fontSize: 17, fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.01em" }}>Phossil</span>
-          </div>
+        <div style={{
+          maxWidth: "var(--max-width)", margin: "0 auto",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+        }}>
+          <span style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 22, fontWeight: 500,
+            color: "var(--text-primary)",
+            letterSpacing: "-0.02em",
+          }}>Phossil</span>
           <a href="#demo" style={{
-            padding: "8px 18px", borderRadius: 8,
-            backgroundColor: "var(--text-primary)", color: "var(--bg)",
-            fontSize: 13, fontWeight: 600, textDecoration: "none",
+            padding: "8px 18px", borderRadius: 999,
+          backgroundColor: "var(--text-primary)", color: "var(--bg)",
+            fontSize: 13, fontWeight: 500, textDecoration: "none",
           }}>See your flow card</a>
         </div>
       </nav>
@@ -33,24 +35,35 @@ function App() {
         paddingLeft: 24, paddingRight: 24,
         textAlign: "center",
       }}>
-        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        <div style={{ maxWidth: 820, margin: "0 auto" }}>
           <h1 style={{
-            fontFamily: "var(--font-display)", fontSize: 56, fontWeight: 400,
-            lineHeight: 1.15, color: "var(--text-primary)", marginBottom: 20,
-            letterSpacing: "-0.02em",
+            fontFamily: "var(--font-display)",
+            fontSize: 60, fontWeight: 300,
+            lineHeight: 1.05,
+            marginBottom: 32,
+            letterSpacing: "-0.025em",
           }}>
-            Software that captures how people think.
+            <span style={{
+              display: "block",
+              color: "var(--text-secondary)",
+            }}>Software remembers your files.</span>
+            <span style={{
+              display: "block",
+              color: "var(--text-primary)",
+            }}>Phossil remembers your thinking.</span>
           </h1>
           <p style={{
-            fontSize: 19, lineHeight: 1.6, color: "var(--text-secondary)",
-            maxWidth: 580, margin: "0 auto 36px",
+            fontSize: 17, lineHeight: 1.65,
+            color: "var(--text-secondary)",
+            maxWidth: 680, margin: "0 auto 36px",
           }}>
-            Phossil is Human Intent Infrastructure for knowledge work. We capture the reasoning behind decisions, and bring it back when context is lost to interruption, time, or handoff.
+            The reasoning behind your work — what you were testing, why you decided, what you were about to do next — usually vanishes the moment context shifts. Phossil captures it across your apps, files, and conversations, with strict privacy. Today's first surface is the flow card you'll see below. The graph it reads from is the architecture behind team alignment, institutional memory, and giving AI the intent behind your work.
           </p>
           <a href="#demo" style={{
-            display: "inline-block", padding: "14px 32px", borderRadius: 10,
-            backgroundColor: "var(--text-primary)", color: "var(--bg)",
-            fontSize: 16, fontWeight: 600, textDecoration: "none",
+            display: "inline-block",
+            padding: "14px 32px", borderRadius: 999,
+            backgroundColor: "var(--accent)", color: "var(--bg)",
+            fontSize: 15, fontWeight: 600, textDecoration: "none",
             transition: "opacity 0.15s ease",
           }}>See what it looks like for your role</a>
         </div>
@@ -58,25 +71,66 @@ function App() {
 
       {/* Problem Stats */}
       <section style={{
-        padding: "80px 24px", backgroundColor: "#EFEEE9",
+        padding: "80px 24px",
+        backgroundColor: "var(--bg-elevated)",
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
       }}>
-        <div style={{ maxWidth: 800, margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32, textAlign: "center" }}>
+        <div style={{ maxWidth: 880, margin: "0 auto" }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: 40, textAlign: "center",
+          }}>
             <div>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: 48, color: "var(--text-primary)", marginBottom: 8 }}>Every 2 min</div>
-              <p style={{ color: "var(--text-secondary)", fontSize: 14, lineHeight: 1.5 }}>An interruption hits during core work hours</p>
+              <div style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 56, fontWeight: 300,
+                color: "var(--text-primary)",
+                marginBottom: 10,
+                letterSpacing: "-0.02em",
+              }}>Every 2 min</div>
+              <p style={{
+                color: "var(--text-secondary)",
+                fontSize: 14, lineHeight: 1.55,
+              }}>An interruption hits during core work hours</p>
             </div>
             <div>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: 48, color: "var(--text-primary)", marginBottom: 8 }}>25 min</div>
-              <p style={{ color: "var(--text-secondary)", fontSize: 14, lineHeight: 1.5 }}>To refocus on your original task after each one</p>
+              <div style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 56, fontWeight: 300,
+                color: "var(--text-primary)",
+                marginBottom: 10,
+                letterSpacing: "-0.02em",
+              }}>23 min</div>
+              <p style={{
+                color: "var(--text-secondary)",
+                fontSize: 14, lineHeight: 1.55,
+              }}>To fully refocus after a single interruption</p>
             </div>
             <div>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: 48, color: "var(--text-primary)", marginBottom: 8 }}>275/day</div>
-              <p style={{ color: "var(--text-secondary)", fontSize: 14, lineHeight: 1.5 }}>Meetings, emails, and messages competing for your attention</p>
+              <div style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 56, fontWeight: 300,
+                color: "var(--text-primary)",
+                marginBottom: 10,
+                letterSpacing: "-0.02em",
+              }}>275/day</div>
+              <p style={{
+                color: "var(--text-secondary)",
+                fontSize: 14, lineHeight: 1.55,
+              }}>Meetings, emails, and messages competing for your attention</p>
             </div>
           </div>
-          <p style={{ textAlign: "center", fontSize: 11, color: "var(--text-tertiary)", marginTop: 24, fontStyle: "italic" }}>
-            Sources: Microsoft 2025 Work Trend Index (n=31,000 workers, 31 countries) · Gloria Mark, <em>Attention Span</em> (Hanover Square Press, 2023)
+          <p style={{
+            textAlign: "center",
+            fontSize: 11,
+            color: "var(--text-tertiary)",
+            marginTop: 32,
+            fontStyle: "italic",
+            fontFamily: "var(--font-mono)",
+          }}>
+            Sources: Microsoft 2025 Work Trend Index (n=31,000 workers, 31 countries) · Gloria Mark, <em style={{ fontFamily: "var(--font-display)" }}>Attention Span</em> (Hanover Square Press, 2023)
           </p>
         </div>
       </section>
