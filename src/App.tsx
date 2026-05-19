@@ -39,13 +39,13 @@ function App() {
             lineHeight: 1.15, color: "var(--text-primary)", marginBottom: 20,
             letterSpacing: "-0.02em",
           }}>
-            How long does it take you to <em>actually</em> start working?
+            Software that captures how people think.
           </h1>
           <p style={{
             fontSize: 19, lineHeight: 1.6, color: "var(--text-secondary)",
             maxWidth: 580, margin: "0 auto 36px",
           }}>
-            After every meeting, every interruption, every Monday morning, you spend 15-30 minutes piecing together where you left off. Phossil reconstructs your working context in seconds. Not by asking you to log anything. By understanding how you work.
+            Phossil is Human Intent Infrastructure for knowledge work. We capture the reasoning behind decisions, and bring it back when context is lost to interruption, time, or handoff.
           </p>
           <a href="#demo" style={{
             display: "inline-block", padding: "14px 32px", borderRadius: 10,
