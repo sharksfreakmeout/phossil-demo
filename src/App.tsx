@@ -79,16 +79,17 @@ function App() {
         <div style={{ maxWidth: 880, margin: "0 auto" }}>
           <div style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
             gap: 40, textAlign: "center",
           }}>
             <div>
               <div style={{
                 fontFamily: "var(--font-display)",
-                fontSize: 56, fontWeight: 300,
+                fontSize: 48, fontWeight: 300,
                 color: "var(--text-primary)",
                 marginBottom: 10,
                 letterSpacing: "-0.02em",
+                whiteSpace: "nowrap",
               }}>Every 2 min</div>
               <p style={{
                 color: "var(--text-secondary)",
@@ -98,10 +99,11 @@ function App() {
             <div>
               <div style={{
                 fontFamily: "var(--font-display)",
-                fontSize: 56, fontWeight: 300,
+                fontSize: 48, fontWeight: 300,
                 color: "var(--text-primary)",
                 marginBottom: 10,
                 letterSpacing: "-0.02em",
+                whiteSpace: "nowrap",
               }}>23 min</div>
               <p style={{
                 color: "var(--text-secondary)",
@@ -111,10 +113,11 @@ function App() {
             <div>
               <div style={{
                 fontFamily: "var(--font-display)",
-                fontSize: 56, fontWeight: 300,
+                fontSize: 48, fontWeight: 300,
                 color: "var(--text-primary)",
                 marginBottom: 10,
                 letterSpacing: "-0.02em",
+                whiteSpace: "nowrap",
               }}>275/day</div>
               <p style={{
                 color: "var(--text-secondary)",
@@ -136,217 +139,119 @@ function App() {
       </section>
 
       {/* Privacy - positioned before demo to establish trust */}
-      <section style={{ padding: "80px 24px" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", alignItems: "flex-start", gap: 48 }}>
-          <div style={{
-            width: 72, height: 72, borderRadius: 18, flexShrink: 0,
-            backgroundColor: "rgba(55,53,47,0.05)",
-            border: "1px solid var(--border)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <rect x="5" y="7" width="22" height="18" rx="2" stroke="var(--text-secondary)" strokeWidth="1.5" fill="none"/>
-              <path d="M11 16v-3a5 5 0 0 1 10 0v3" stroke="var(--text-primary)" strokeWidth="1.5" fill="none"/>
-              <rect x="10" y="16" width="12" height="8" rx="1.5" stroke="var(--text-primary)" strokeWidth="1.5" fill="rgba(55,53,47,0.06)"/>
-              <circle cx="16" cy="20" r="1.5" fill="var(--text-primary)"/>
-            </svg>
+      <section style={{
+        padding: "var(--section-padding) 24px",
+        backgroundColor: "var(--bg)",
+      }}>
+        <div style={{ maxWidth: 760, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <h2 style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 44, fontWeight: 300,
+              color: "var(--text-primary)",
+              lineHeight: 1.1, letterSpacing: "-0.02em",
+              marginBottom: 16,
+            }}>Built local-first. Designed for enterprise trust.</h2>
+            <p style={{
+              fontSize: 16, lineHeight: 1.6,
+              color: "var(--text-secondary)",
+              maxWidth: 580, margin: "0 auto",
+            }}>
+              Your reasoning is the most sensitive data you generate. Three principles shape the architecture.
+            </p>
           </div>
-          <div>
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: 32, fontWeight: 400, color: "var(--text-primary)", marginBottom: 12 }}>
-              Built local-first. Designed for enterprise trust.
-            </h2>
-            <p style={{ fontSize: 16, lineHeight: 1.65, color: "var(--text-secondary)", marginBottom: 12 }}>
-              Phossil runs on your machine. Your cognitive data, your reasoning patterns, your entire work context stays on your device. No cloud processing. No data harvesting. No employer surveillance.
-            </p>
-            <p style={{ fontSize: 15, lineHeight: 1.6, color: "var(--text-secondary)" }}>
-              When teams use Phossil, only the summaries you choose to share leave your device. Your raw activity stays local. Always. This is a tool for you, not a tool for monitoring you.
-            </p>
+
+          <ol style={{
+            listStyle: "none", padding: 0, margin: 0,
+            display: "flex", flexDirection: "column", gap: 32,
+            counterReset: "principle",
+          }}>
+            {[
+              "Raw behavioral data stays on your device. Synthesis happens locally. Nothing about how you actually work is sent to a cloud you don't control.",
+              "The cloud layer is optional and opt-in. When it's used, it processes derived signals only. Summaries and patterns, not raw capture.",
+              "Self-hosting is the path for organizations with stricter requirements. Local-first is the foundation that makes that path possible.",
+            ].map((text, i) => (
+              <li key={i} style={{
+                display: "grid",
+                gridTemplateColumns: "auto 1fr",
+                gap: 24, alignItems: "start",
+              }}>
+                <span style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: 36, fontWeight: 300,
+                  color: "var(--accent)",
+                  lineHeight: 1, letterSpacing: "-0.02em",
+                  minWidth: 36,
+                }}>{i + 1}</span>
+                <p style={{
+                  fontSize: 16, lineHeight: 1.65,
+                  color: "var(--text-primary)",
+                  margin: 0, paddingTop: 4,
+                }}>{text}</p>
+              </li>
+            ))}
+          </ol>
+
+          <div style={{ textAlign: "center", marginTop: 56 }}>
+            <a href="mailto:eric.espinel@infraction.space?subject=Phossil%20enterprise%20data%20requirements"
+              style={{
+                color: "var(--text-secondary)",
+                fontSize: 14,
+                textDecoration: "none",
+                borderBottom: "1px solid var(--border-strong)",
+                paddingBottom: 2,
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; }}
+            >Have stricter data requirements? Let's talk →</a>
           </div>
         </div>
       </section>
 
       {/* Demo */}
-      <section id="demo" style={{ padding: "var(--section-padding) 24px" }}>
+      <section id="demo" style={{
+        padding: "var(--section-padding) 24px",
+        backgroundColor: "var(--bg-elevated)",
+      }}>
         <div style={{ maxWidth: "var(--max-width)", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <p style={{
-              fontSize: 13, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase",
-              color: "var(--accent)", marginBottom: 12,
-            }}>Interactive Demo</p>
-            <h2 style={{
-              fontFamily: "var(--font-display)", fontSize: 44, fontWeight: 400,
-              color: "var(--text-primary)", marginBottom: 12,
-            }}>See your flow card</h2>
-            <p style={{ color: "var(--text-secondary)", fontSize: 16, maxWidth: 520, margin: "0 auto 16px" }}>
-              Pick your role. Pick your tools. We'll show you what cognitive recovery looks like.
-            </p>
-            <p style={{
-              fontSize: 13, color: "var(--text-tertiary)", maxWidth: 480, margin: "0 auto",
-              fontStyle: "italic",
-            }}>
-              In the real product, you never type any of this. Phossil captures everything automatically by observing your tools. This demo simulates what that experience feels like.
-            </p>
-          </div>
-
-          {/* Demo container */}
-          <div style={{
-            background: "linear-gradient(135deg, rgba(99,102,241,0.04) 0%, rgba(59,130,246,0.04) 100%)",
-            border: "1px solid rgba(99,102,241,0.1)",
-            borderRadius: 20,
-            padding: "48px 32px",
-            boxShadow: "0 0 80px rgba(99,102,241,0.06), 0 0 0 1px rgba(99,102,241,0.03)",
-            position: "relative",
-          }}>
+          {/* Heading block */}
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
             <div style={{
-              position: "absolute", top: -1, left: 40, right: 40, height: 2,
-              background: "linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent)",
-              borderRadius: 2,
-            }} />
-            <Demo />
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section style={{ padding: "var(--section-padding) 24px", backgroundColor: "#EFEEE9" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 16 }}>
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 400, color: "var(--text-primary)" }}>
-              How Phossil works
-            </h2>
-          </div>
-          <p style={{ textAlign: "center", color: "var(--text-secondary)", fontSize: 15, maxWidth: 520, margin: "0 auto 56px" }}>
-            Phossil is a native app that runs on your computer. It observes, connects, and synthesizes, so you never have to reconstruct your own context again.
-          </p>
-
-          {/* Visual flow */}
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "center", gap: 0 }}>
-            {/* Step 1: Observe */}
-            <div style={{ flex: 1, maxWidth: 260, textAlign: "center" }}>
-              <div style={{
-                width: 80, height: 80, borderRadius: 20, margin: "0 auto 20px",
-                background: "linear-gradient(135deg, #E8F4FD, #D1E9FA)",
-                border: "1px solid rgba(59,130,246,0.15)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-                  <path d="M18 8C10 8 4 18 4 18s6 10 14 10 14-10 14-10-6-10-14-10z" stroke="#3B82F6" strokeWidth="2" fill="none"/>
-                  <circle cx="18" cy="18" r="5" stroke="#3B82F6" strokeWidth="2" fill="rgba(59,130,246,0.1)"/>
-                  <circle cx="18" cy="18" r="2" fill="#3B82F6"/>
-                </svg>
-              </div>
-              <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: "var(--text-primary)" }}>Observe</h3>
-              <p style={{ fontSize: 14, lineHeight: 1.6, color: "var(--text-secondary)", marginBottom: 16 }}>
-                Phossil sees the file you're editing, the message you're reading, the document you switched away from. Quietly. No buttons. No logging. No screenshots. Just awareness of what's active.
-              </p>
-              <div style={{
-                display: "flex", flexWrap: "wrap", gap: 4, justifyContent: "center",
-              }}>
-                {["VS Code", "Slack", "Jira", "Docs", "Chrome", "Terminal"].map((tool) => (
-                  <span key={tool} style={{
-                    fontSize: 10, color: "#3B82F6", backgroundColor: "rgba(59,130,246,0.08)",
-                    padding: "2px 8px", borderRadius: 10, fontFamily: "var(--font-mono)",
-                  }}>{tool}</span>
-                ))}
-              </div>
-            </div>
-
-            {/* Arrow 1 */}
-            <div style={{ display: "flex", alignItems: "center", padding: "36px 8px 0" }}>
-              <svg width="48" height="24" viewBox="0 0 48 24" fill="none">
-                <path d="M0 12h40" stroke="var(--text-tertiary)" strokeWidth="1.5" strokeDasharray="4 4"/>
-                <path d="M36 6l8 6-8 6" stroke="var(--text-tertiary)" strokeWidth="1.5" fill="none"/>
-              </svg>
-            </div>
-
-            {/* Step 2: Connect */}
-            <div style={{ flex: 1, maxWidth: 260, textAlign: "center" }}>
-              <div style={{
-                width: 80, height: 80, borderRadius: 20, margin: "0 auto 20px",
-                background: "linear-gradient(135deg, #EDE9FE, #DDD6FE)",
-                border: "1px solid rgba(99,102,241,0.15)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-                  <circle cx="18" cy="10" r="3" fill="rgba(99,102,241,0.2)" stroke="#6366F1" strokeWidth="1.5"/>
-                  <circle cx="10" cy="26" r="3" fill="rgba(99,102,241,0.2)" stroke="#6366F1" strokeWidth="1.5"/>
-                  <circle cx="26" cy="26" r="3" fill="rgba(99,102,241,0.2)" stroke="#6366F1" strokeWidth="1.5"/>
-                  <circle cx="28" cy="14" r="2" fill="rgba(99,102,241,0.15)" stroke="#6366F1" strokeWidth="1"/>
-                  <circle cx="8" cy="16" r="2" fill="rgba(99,102,241,0.15)" stroke="#6366F1" strokeWidth="1"/>
-                  <line x1="18" y1="13" x2="10" y2="23" stroke="#6366F1" strokeWidth="1" opacity="0.4"/>
-                  <line x1="18" y1="13" x2="26" y2="23" stroke="#6366F1" strokeWidth="1" opacity="0.4"/>
-                  <line x1="10" y1="26" x2="26" y2="26" stroke="#6366F1" strokeWidth="1" opacity="0.4"/>
-                  <line x1="18" y1="10" x2="28" y2="14" stroke="#6366F1" strokeWidth="1" opacity="0.3"/>
-                  <line x1="18" y1="10" x2="8" y2="16" stroke="#6366F1" strokeWidth="1" opacity="0.3"/>
-                </svg>
-              </div>
-              <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: "var(--text-primary)" }}>Connect</h3>
-              <p style={{ fontSize: 14, lineHeight: 1.6, color: "var(--text-secondary)", marginBottom: 16 }}>
-                A knowledge graph maps how your work relates: that doc connects to a ticket, the ticket has a deadline from your manager, and your manager just changed the priority in Slack.
-              </p>
-              <div style={{
-                display: "flex", flexWrap: "wrap", gap: 4, justifyContent: "center",
-              }}>
-                {["files → tickets", "people → deadlines", "decisions → context"].map((rel) => (
-                  <span key={rel} style={{
-                    fontSize: 10, color: "#6366F1", backgroundColor: "rgba(99,102,241,0.08)",
-                    padding: "2px 8px", borderRadius: 10, fontFamily: "var(--font-mono)",
-                  }}>{rel}</span>
-                ))}
-              </div>
-            </div>
-
-            {/* Arrow 2 */}
-            <div style={{ display: "flex", alignItems: "center", padding: "36px 8px 0" }}>
-              <svg width="48" height="24" viewBox="0 0 48 24" fill="none">
-                <path d="M0 12h40" stroke="var(--text-tertiary)" strokeWidth="1.5" strokeDasharray="4 4"/>
-                <path d="M36 6l8 6-8 6" stroke="var(--text-tertiary)" strokeWidth="1.5" fill="none"/>
-              </svg>
-            </div>
-
-            {/* Step 3: Recover */}
-            <div style={{ flex: 1, maxWidth: 260, textAlign: "center" }}>
-              <div style={{
-                width: 80, height: 80, borderRadius: 20, margin: "0 auto 20px",
-                background: "linear-gradient(135deg, #DCFCE7, #BBF7D0)",
-                border: "1px solid rgba(34,197,94,0.15)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-                  <rect x="6" y="8" width="24" height="20" rx="3" stroke="#22C55E" strokeWidth="1.5" fill="rgba(34,197,94,0.08)"/>
-                  <line x1="10" y1="14" x2="22" y2="14" stroke="#22C55E" strokeWidth="1.5" opacity="0.6"/>
-                  <line x1="10" y1="18" x2="26" y2="18" stroke="#22C55E" strokeWidth="1" opacity="0.3"/>
-                  <line x1="10" y1="21" x2="20" y2="21" stroke="#22C55E" strokeWidth="1" opacity="0.3"/>
-                  <path d="M22 22l2 2 4-4" stroke="#22C55E" strokeWidth="1.5" fill="none"/>
-                </svg>
-              </div>
-              <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: "var(--text-primary)" }}>Recover</h3>
-              <p style={{ fontSize: 14, lineHeight: 1.6, color: "var(--text-secondary)", marginBottom: 16 }}>
-                When you sit down after an interruption, a meeting, or a full night away, Phossil synthesizes everything into a flow card: what you were thinking, what changed, and the single most important thing to do next.
-              </p>
-              <div style={{
-                display: "flex", flexWrap: "wrap", gap: 4, justifyContent: "center",
-              }}>
-                {["your intent", "what changed", "what's next"].map((item) => (
-                  <span key={item} style={{
-                    fontSize: 10, color: "#22C55E", backgroundColor: "rgba(34,197,94,0.08)",
-                    padding: "2px 8px", borderRadius: 10, fontFamily: "var(--font-mono)",
-                  }}>{item}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Key differentiator callout */}
-          <div style={{
-            maxWidth: 560, margin: "48px auto 0", textAlign: "center",
-            padding: "20px 24px", borderRadius: 12,
-            backgroundColor: "rgba(255,255,255,0.6)",
-            border: "1px solid var(--border)",
-          }}>
-            <p style={{ fontSize: 14, color: "var(--text-primary)", fontWeight: 500, margin: 0, lineHeight: 1.55 }}>
-              Unlike note-taking apps, meeting recorders, or AI assistants, Phossil requires zero input from you. It captures context by observing your actual work, not by asking you to describe it.
+              fontFamily: "var(--font-mono)",
+              fontSize: 11, fontWeight: 500,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "var(--accent)",
+              marginBottom: 16,
+            }}>The Wedge</div>
+            <h2 style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 44, fontWeight: 300,
+              color: "var(--text-primary)",
+              lineHeight: 1.1, letterSpacing: "-0.02em",
+              marginBottom: 16,
+            }}>The first surface is the flow card.</h2>
+            <p style={{
+              fontSize: 16, lineHeight: 1.6,
+              color: "var(--text-secondary)",
+              maxWidth: 640, margin: "0 auto",
+            }}>
+              It reconstructs your thinking after an interruption. Hypotheses, stuck points, and where to pick up. The flow card reads from a graph of your reasoning, captured automatically across your apps, files, and conversations.
             </p>
+          </div>
+
+          {/* Demo wrapper — subtle dark card */}
+          <div style={{
+            backgroundColor: "var(--bg)",
+            border: "1px solid var(--border-strong)",
+            borderRadius: 16,
+            padding: 48,
+            display: "flex",
+            justifyContent: "center",
+            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.4)",
+          }}>
+            <Demo />
           </div>
         </div>
       </section>

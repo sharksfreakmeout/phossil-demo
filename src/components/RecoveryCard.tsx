@@ -5,7 +5,7 @@ import type { RecoveryCard as CardType, Delta } from "../types";
 
 function StatusPill({ status }: { status: string }) {
   const styles: Record<string, { bg: string; color: string; text: string }> = {
-    done: { bg: "rgba(29,158,117,0.12)", color: "#5DCAA5", text: "Done" },
+    done: { bg: "rgba(132,201,135,0.12)", color: "#84c987", text: "Done" },
     todo: { bg: "rgba(255,255,255,0.05)", color: "#6B7280", text: "To do" },
     "in-progress": { bg: "rgba(249,115,22,0.1)", color: "#FB923C", text: "In progress" },
   };
@@ -55,13 +55,13 @@ function InfoTip({ text }: { text: string }) {
         style={{
           display: "inline-flex", alignItems: "center", justifyContent: "center",
           width: 16, height: 16, borderRadius: "50%", border: "none", cursor: "pointer",
-          backgroundColor: "rgba(29,158,117,0.2)", color: "#5DCAA5",
+          backgroundColor: "rgba(230,177,92,0.2)", color: "#e6b15c",
           fontSize: 9, fontWeight: 700, flexShrink: 0, marginLeft: 4, padding: 0,
         }}>?</button>
       {open && pos && (
         <div style={{
           position: "fixed", top: pos.top, left: pos.left, width: 260,
-          backgroundColor: "#252830", border: "1px solid rgba(29,158,117,0.2)",
+          backgroundColor: "#252830", border: "1px solid rgba(230,177,92,0.2)",
           borderRadius: 8, padding: "10px 12px", fontSize: 12, lineHeight: 1.55,
           color: "#9CA0A8", zIndex: 9999,
           boxShadow: "0 8px 30px rgba(0,0,0,0.4)",
@@ -239,8 +239,8 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
       {/* Card Shell */}
       <div style={{
         backgroundColor: "#0d0f14", borderRadius: 16,
-        border: "1px solid rgba(29,158,117,0.15)",
-        boxShadow: "0 25px 60px rgba(0,0,0,0.4), 0 0 80px rgba(29,158,117,0.04)",
+        border: "1px solid rgba(230,177,92,0.15)",
+        boxShadow: "0 25px 60px rgba(0,0,0,0.4), 0 0 80px rgba(230,177,92,0.04)",
         overflow: "hidden",
       }}>
         {/* Header */}
@@ -251,7 +251,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{
               width: 22, height: 22, borderRadius: 6,
-              background: "linear-gradient(135deg, #1D9E75, #0F6E56)",
+              background: "linear-gradient(135deg, #c4934a, #8a6938)",
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: 10, color: "#fff", fontWeight: 700,
             }}>P</div>
@@ -275,24 +275,24 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
 
           {/* Locus */}
           <div style={{
-            background: "rgba(29,158,117,0.06)", border: "1px solid rgba(29,158,117,0.12)",
+            background: "rgba(230,177,92,0.06)", border: "1px solid rgba(230,177,92,0.12)",
             borderRadius: 10, padding: "14px 16px", marginBottom: 16,
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#1D9E75" strokeWidth="1.5" fill="none"/><path d="M7 4v3l2 1" stroke="#1D9E75" strokeWidth="1.5" strokeLinecap="round"/></svg>
-              <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: "#5DCAA5" }}>Pick up here</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#c4934a" strokeWidth="1.5" fill="none"/><path d="M7 4v3l2 1" stroke="#c4934a" strokeWidth="1.5" strokeLinecap="round"/></svg>
+              <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: "#e6b15c" }}>Pick up here</span>
               {tips.locus && <InfoTip text={tips.locus} />}
             </div>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "rgba(255,255,255,0.8)", marginBottom: 4 }}>{data.locus.primary}</div>
             {data.locus.detail && <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)" }}>{data.locus.detail}</div>}
-            {data.locus.state && <div style={{ marginTop: 8, fontFamily: "var(--font-mono)", fontSize: 12, color: "#5DCAA5", fontStyle: "italic" }}>{data.locus.state}</div>}
+            {data.locus.state && <div style={{ marginTop: 8, fontFamily: "var(--font-mono)", fontSize: 12, color: "#e6b15c", fontStyle: "italic" }}>{data.locus.state}</div>}
           </div>
 
           {/* Next Action */}
           <div style={{ marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="#1D9E75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: "#5DCAA5" }}>Next step</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="#c4934a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: "#e6b15c" }}>Next step</span>
               {tips.nextStep && <InfoTip text={tips.nextStep} />}
             </div>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.55, margin: 0 }}>{data.nextAction}</p>
@@ -305,8 +305,8 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
             {data.progress && data.progress.length > 0 && (
               <AwarenessRow title="Progress" tip={tips.progress}
                 badge={`${progressDone}/${progressTotal} done`}
-                badgeColor={progressDone === progressTotal ? "#5DCAA5" : "#FB923C"}
-                badgeBg={progressDone === progressTotal ? "rgba(29,158,117,0.12)" : "rgba(249,115,22,0.1)"}
+                badgeColor={progressDone === progressTotal ? "#84c987" : "#FB923C"}
+                badgeBg={progressDone === progressTotal ? "rgba(132,201,135,0.12)" : "rgba(249,115,22,0.1)"}
               >
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {data.progress.map((item, i) => (
@@ -348,7 +348,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                   {data.connections.map((conn, i) => (
                     <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
                       <span style={{
-                        fontSize: 10, fontWeight: 600, color: "#5DCAA5", backgroundColor: "rgba(29,158,117,0.1)",
+                        fontSize: 10, fontWeight: 600, color: "#e6b15c", backgroundColor: "rgba(230,177,92,0.1)",
                         padding: "2px 6px", borderRadius: 3, fontFamily: "var(--font-mono)", whiteSpace: "nowrap", marginTop: 2,
                       }}>{conn.label}</span>
                       <span style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.45 }}>{conn.text}</span>
@@ -381,8 +381,8 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
         <div style={{ padding: "8px 20px 4px", display: "flex", gap: 8 }}>
           <button onClick={() => setCtaClicked(true)} style={{
             flex: 1, padding: "11px 16px", borderRadius: 10, border: "none",
-            background: ctaClicked ? "rgba(29,158,117,0.15)" : "#1D9E75",
-            color: ctaClicked ? "#5DCAA5" : "#fff",
+            background: ctaClicked ? "rgba(230,177,92,0.15)" : "#c4934a",
+            color: ctaClicked ? "#e6b15c" : "#fff",
             fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-body)",
             transition: "all 0.2s ease",
           }}
@@ -399,10 +399,10 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
           <div style={{ padding: "8px 20px 12px" }}>
             <div style={{
               padding: "10px 14px", borderRadius: 8,
-              background: "rgba(29,158,117,0.06)", border: "1px solid rgba(29,158,117,0.1)",
+              background: "rgba(230,177,92,0.06)", border: "1px solid rgba(230,177,92,0.1)",
             }}>
               <p style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.55 }}>
-                In the real product, this opens <strong style={{ color: "#5DCAA5" }}>{data.locus.primary}</strong> at the exact position where you left off
+                In the real product, this opens <strong style={{ color: "#e6b15c" }}>{data.locus.primary}</strong> at the exact position where you left off
                 {data.locus.detail ? ` (${data.locus.detail})` : ""}
                 {data.locus.state ? `. Your unsaved work is still there.` : "."} One click from card to deep work.
               </p>
@@ -421,13 +421,13 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                 style={{
                   padding: "6px 12px", borderRadius: 20, cursor: "pointer",
                   border: "1px solid",
-                  borderColor: expandedPrompt === i ? "rgba(29,158,117,0.3)" : "rgba(255,255,255,0.08)",
-                  background: expandedPrompt === i ? "rgba(29,158,117,0.08)" : "rgba(255,255,255,0.02)",
-                  color: expandedPrompt === i ? "#5DCAA5" : "rgba(255,255,255,0.45)",
+                  borderColor: expandedPrompt === i ? "rgba(230,177,92,0.3)" : "rgba(255,255,255,0.08)",
+                  background: expandedPrompt === i ? "rgba(230,177,92,0.08)" : "rgba(255,255,255,0.02)",
+                  color: expandedPrompt === i ? "#e6b15c" : "rgba(255,255,255,0.45)",
                   fontSize: 12, fontFamily: "var(--font-body)",
                   transition: "all 0.15s ease",
                 }}
-                onMouseEnter={(e) => { if (expandedPrompt !== i) { e.currentTarget.style.borderColor = "rgba(29,158,117,0.2)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; } }}
+                onMouseEnter={(e) => { if (expandedPrompt !== i) { e.currentTarget.style.borderColor = "rgba(230,177,92,0.2)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; } }}
                 onMouseLeave={(e) => { if (expandedPrompt !== i) { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.45)"; } }}
               >{prompt.text}</button>
             ))}
@@ -437,7 +437,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
           {expandedPrompt !== null && suggestedPrompts[expandedPrompt] && (
             <div style={{
               padding: "10px 14px", marginBottom: 10, borderRadius: 8,
-              background: "rgba(29,158,117,0.05)", border: "1px solid rgba(29,158,117,0.1)",
+              background: "rgba(230,177,92,0.05)", border: "1px solid rgba(230,177,92,0.1)",
             }}>
               <p style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", margin: 0, lineHeight: 1.55 }}>
                 {suggestedPrompts[expandedPrompt].answer}
@@ -451,8 +451,8 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
               {chatMessages.map((msg, i) => (
                 <div key={i} style={{
                   padding: "8px 12px", borderRadius: 8,
-                  background: msg.role === "user" ? "rgba(255,255,255,0.04)" : "rgba(29,158,117,0.06)",
-                  border: msg.role === "user" ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(29,158,117,0.1)",
+                  background: msg.role === "user" ? "rgba(255,255,255,0.04)" : "rgba(230,177,92,0.06)",
+                  border: msg.role === "user" ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(230,177,92,0.1)",
                 }}>
                   <p style={{
                     fontSize: 12, margin: 0, lineHeight: 1.55,
@@ -461,8 +461,8 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                 </div>
               ))}
               {chatLoading && (
-                <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(29,158,117,0.04)" }}>
-                  <p style={{ fontSize: 12, color: "#5DCAA5", margin: 0, fontStyle: "italic" }}>Thinking...</p>
+                <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(230,177,92,0.04)" }}>
+                  <p style={{ fontSize: 12, color: "#e6b15c", margin: 0, fontStyle: "italic" }}>Thinking...</p>
                 </div>
               )}
             </div>
@@ -479,7 +479,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
               color: "rgba(255,255,255,0.8)", fontSize: 13, fontFamily: "var(--font-body)",
               outline: "none", boxSizing: "border-box",
             }}
-            onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(29,158,117,0.3)"; }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(230,177,92,0.3)"; }}
             onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
           />
         </div>
@@ -511,7 +511,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                         color: "rgba(255,255,255,0.65)", fontSize: 13, fontWeight: 500,
                         transition: "all 0.15s ease", display: "flex", alignItems: "center", gap: 6,
                       }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(29,158,117,0.3)"; e.currentTarget.style.backgroundColor = "rgba(29,158,117,0.08)"; }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(230,177,92,0.3)"; e.currentTarget.style.backgroundColor = "rgba(230,177,92,0.08)"; }}
                       onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.03)"; }}
                     ><span>{option.emoji}</span><span>{option.label}</span></button>
                   ))}
@@ -524,8 +524,8 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
               <div>
                 <div style={{
                   display: "inline-block", padding: "4px 10px", borderRadius: 4, marginBottom: 16,
-                  backgroundColor: cardAccuracy === "exactly" ? "rgba(29,158,117,0.1)" : cardAccuracy === "close" ? "rgba(29,158,117,0.06)" : "rgba(255,255,255,0.04)",
-                  color: cardAccuracy === "exactly" ? "#5DCAA5" : cardAccuracy === "close" ? "#5DCAA5" : "rgba(255,255,255,0.5)",
+                  backgroundColor: cardAccuracy === "exactly" ? "rgba(230,177,92,0.1)" : cardAccuracy === "close" ? "rgba(230,177,92,0.06)" : "rgba(255,255,255,0.04)",
+                  color: cardAccuracy === "exactly" ? "#e6b15c" : cardAccuracy === "close" ? "#e6b15c" : "rgba(255,255,255,0.5)",
                   fontSize: 12, fontWeight: 500,
                 }}>
                   {cardAccuracy === "exactly" ? "🎯 Spot on" : cardAccuracy === "close" ? "👍 Pretty close" : "🤔 Not really"}
@@ -546,12 +546,12 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                         { id: "connections", label: "Connections I would have forgotten" },
                         { id: "overall-feeling", label: "The overall feeling of being understood" },
                       ].map((o) => { const s = contextualSelections.includes(o.id); return (
-                        <button key={o.id} onClick={() => toggleContextual(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: s ? "rgba(29,158,117,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: s ? "rgba(29,158,117,0.1)" : "rgba(255,255,255,0.02)", color: s ? "#5DCAA5" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease", textAlign: "left" }}>{o.label}</button>
+                        <button key={o.id} onClick={() => toggleContextual(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: s ? "rgba(230,177,92,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: s ? "rgba(230,177,92,0.1)" : "rgba(255,255,255,0.02)", color: s ? "#e6b15c" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease", textAlign: "left" }}>{o.label}</button>
                       ); })}
                     </div>
                     <textarea value={contextualText} onChange={(e) => setContextualText(e.target.value)} placeholder="What would make this even more useful? (optional)"
                       style={{ width: "100%", minHeight: 48, padding: 10, borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.8)", fontSize: 12, fontFamily: "var(--font-body)", resize: "vertical", outline: "none", boxSizing: "border-box", marginBottom: 12 }}
-                      onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(29,158,117,0.3)"; }}
+                      onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(230,177,92,0.3)"; }}
                       onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
                     />
                   </div>
@@ -573,12 +573,12 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                         { id: "too-much", label: "Too much information" },
                         { id: "not-enough", label: "Not enough detail" },
                       ].map((o) => { const s = contextualSelections.includes(o.id); return (
-                        <button key={o.id} onClick={() => toggleContextual(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: s ? "rgba(29,158,117,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: s ? "rgba(29,158,117,0.1)" : "rgba(255,255,255,0.02)", color: s ? "#5DCAA5" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease", textAlign: "left" }}>{o.label}</button>
+                        <button key={o.id} onClick={() => toggleContextual(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: s ? "rgba(230,177,92,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: s ? "rgba(230,177,92,0.1)" : "rgba(255,255,255,0.02)", color: s ? "#e6b15c" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease", textAlign: "left" }}>{o.label}</button>
                       ); })}
                     </div>
                     <textarea value={contextualText} onChange={(e) => setContextualText(e.target.value)} placeholder="What would make it closer to your real day? (optional)"
                       style={{ width: "100%", minHeight: 48, padding: 10, borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.8)", fontSize: 12, fontFamily: "var(--font-body)", resize: "vertical", outline: "none", boxSizing: "border-box", marginBottom: 12 }}
-                      onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(29,158,117,0.3)"; }}
+                      onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(230,177,92,0.3)"; }}
                       onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
                     />
                   </div>
@@ -613,7 +613,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                           "Any additional context? (optional)"
                         }
                         style={{ width: "100%", minHeight: 48, padding: 10, borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.8)", fontSize: 12, fontFamily: "var(--font-body)", resize: "vertical", outline: "none", boxSizing: "border-box", marginBottom: 12 }}
-                        onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(29,158,117,0.3)"; }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(230,177,92,0.3)"; }}
                         onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
                       />
                     )}
@@ -637,7 +637,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                   <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 8 }}>How many times per day do you lose your thread?</div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                     {[{ id: "1-2", label: "1-2 times" }, { id: "3-5", label: "3-5 times" }, { id: "6-10", label: "6-10 times" }, { id: "10-plus", label: "10+ times" }].map((o) => (
-                      <button key={o.id} onClick={() => setInterruptionFrequency(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: interruptionFrequency === o.id ? "rgba(29,158,117,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: interruptionFrequency === o.id ? "rgba(29,158,117,0.1)" : "rgba(255,255,255,0.02)", color: interruptionFrequency === o.id ? "#5DCAA5" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease" }}>{o.label}</button>
+                      <button key={o.id} onClick={() => setInterruptionFrequency(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: interruptionFrequency === o.id ? "rgba(230,177,92,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: interruptionFrequency === o.id ? "rgba(230,177,92,0.1)" : "rgba(255,255,255,0.02)", color: interruptionFrequency === o.id ? "#e6b15c" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease" }}>{o.label}</button>
                     ))}
                   </div>
                 </div>
@@ -646,7 +646,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                   <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 8 }}>How long do you usually spend getting re-oriented?</div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                     {[{ id: "under-5", label: "< 5 min" }, { id: "5-15", label: "5-15 min" }, { id: "15-30", label: "15-30 min" }, { id: "30-60", label: "30-60 min" }, { id: "60-plus", label: "60+ min" }].map((o) => (
-                      <button key={o.id} onClick={() => setOrientationTime(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: orientationTime === o.id ? "rgba(29,158,117,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: orientationTime === o.id ? "rgba(29,158,117,0.1)" : "rgba(255,255,255,0.02)", color: orientationTime === o.id ? "#5DCAA5" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease" }}>{o.label}</button>
+                      <button key={o.id} onClick={() => setOrientationTime(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: orientationTime === o.id ? "rgba(230,177,92,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: orientationTime === o.id ? "rgba(230,177,92,0.1)" : "rgba(255,255,255,0.02)", color: orientationTime === o.id ? "#e6b15c" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease" }}>{o.label}</button>
                     ))}
                   </div>
                 </div>
@@ -655,7 +655,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                   <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 8 }}>Would you let a tool quietly observe your work to make this automatic?</div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                     {[{ id: "yes", label: "Yes, absolutely" }, { id: "maybe", label: "Maybe, with controls" }, { id: "no", label: "No" }].map((o) => (
-                      <button key={o.id} onClick={() => setPrivacyComfort(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: privacyComfort === o.id ? "rgba(29,158,117,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: privacyComfort === o.id ? "rgba(29,158,117,0.1)" : "rgba(255,255,255,0.02)", color: privacyComfort === o.id ? "#5DCAA5" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease" }}>{o.label}</button>
+                      <button key={o.id} onClick={() => setPrivacyComfort(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: privacyComfort === o.id ? "rgba(230,177,92,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: privacyComfort === o.id ? "rgba(230,177,92,0.1)" : "rgba(255,255,255,0.02)", color: privacyComfort === o.id ? "#e6b15c" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease" }}>{o.label}</button>
                     ))}
                   </div>
                 </div>
@@ -682,7 +682,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                     { id: "builder", label: "I might want to build this with you" },
                     { id: "fan", label: "Just a fan, keep me posted" },
                   ].map((o) => { const s = intention.includes(o.id); return (
-                    <button key={o.id} onClick={() => toggleIntention(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: s ? "rgba(29,158,117,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: s ? "rgba(29,158,117,0.1)" : "rgba(255,255,255,0.02)", color: s ? "#5DCAA5" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease", textAlign: "left" }}>{o.label}</button>
+                    <button key={o.id} onClick={() => toggleIntention(o.id)} style={{ padding: "6px 12px", borderRadius: 6, cursor: "pointer", border: "1px solid", borderColor: s ? "rgba(230,177,92,0.4)" : "rgba(255,255,255,0.08)", backgroundColor: s ? "rgba(230,177,92,0.1)" : "rgba(255,255,255,0.02)", color: s ? "#e6b15c" : "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 500, transition: "all 0.15s ease", textAlign: "left" }}>{o.label}</button>
                   ); })}
                 </div>
 
@@ -690,7 +690,7 @@ export default function RecoveryCard({ data, showAnnotations = false, showFeedba
                   <div style={{ marginBottom: 14 }}>
                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com"
                       style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.8)", fontSize: 13, fontFamily: "var(--font-body)", outline: "none", boxSizing: "border-box" }}
-                      onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(29,158,117,0.3)"; }}
+                      onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(230,177,92,0.3)"; }}
                       onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
                     />
                   </div>
