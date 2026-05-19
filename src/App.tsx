@@ -1,4 +1,5 @@
 import Demo from "./components/Demo";
+import HIIArchitecture from "./components/HIIArchitecture";
 
 function App() {
   return (
@@ -138,77 +139,6 @@ function App() {
         </div>
       </section>
 
-      {/* Privacy - positioned before demo to establish trust */}
-      <section style={{
-        padding: "var(--section-padding) 24px",
-        backgroundColor: "var(--bg)",
-      }}>
-        <div style={{ maxWidth: 760, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <h2 style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 44, fontWeight: 300,
-              color: "var(--text-primary)",
-              lineHeight: 1.1, letterSpacing: "-0.02em",
-              marginBottom: 16,
-            }}>Built local-first. Designed for enterprise trust.</h2>
-            <p style={{
-              fontSize: 16, lineHeight: 1.6,
-              color: "var(--text-secondary)",
-              maxWidth: 580, margin: "0 auto",
-            }}>
-              Your reasoning is the most sensitive data you generate. Three principles shape the architecture.
-            </p>
-          </div>
-
-          <ol style={{
-            listStyle: "none", padding: 0, margin: 0,
-            display: "flex", flexDirection: "column", gap: 32,
-            counterReset: "principle",
-          }}>
-            {[
-              "Raw behavioral data stays on your device. Synthesis happens locally. Nothing about how you actually work is sent to a cloud you don't control.",
-              "The cloud layer is optional and opt-in. When it's used, it processes derived signals only. Summaries and patterns, not raw capture.",
-              "Self-hosting is the path for organizations with stricter requirements. Local-first is the foundation that makes that path possible.",
-            ].map((text, i) => (
-              <li key={i} style={{
-                display: "grid",
-                gridTemplateColumns: "auto 1fr",
-                gap: 24, alignItems: "start",
-              }}>
-                <span style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 36, fontWeight: 300,
-                  color: "var(--accent)",
-                  lineHeight: 1, letterSpacing: "-0.02em",
-                  minWidth: 36,
-                }}>{i + 1}</span>
-                <p style={{
-                  fontSize: 16, lineHeight: 1.65,
-                  color: "var(--text-primary)",
-                  margin: 0, paddingTop: 4,
-                }}>{text}</p>
-              </li>
-            ))}
-          </ol>
-
-          <div style={{ textAlign: "center", marginTop: 56 }}>
-            <a href="mailto:eric.espinel@infraction.space?subject=Phossil%20enterprise%20data%20requirements"
-              style={{
-                color: "var(--text-secondary)",
-                fontSize: 14,
-                textDecoration: "none",
-                borderBottom: "1px solid var(--border-strong)",
-                paddingBottom: 2,
-                transition: "color 0.15s ease",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; }}
-            >Have stricter data requirements? Let's talk →</a>
-          </div>
-        </div>
-      </section>
-
       {/* Demo */}
       <section id="demo" style={{
         padding: "var(--section-padding) 24px",
@@ -252,6 +182,48 @@ function App() {
             boxShadow: "0 20px 60px rgba(0, 0, 0, 0.4)",
           }}>
             <Demo />
+          </div>
+        </div>
+      </section>
+
+      {/* HII Architecture */}
+      <section style={{
+        padding: "var(--section-padding) 24px",
+        backgroundColor: "var(--bg)",
+      }}>
+        <div style={{ maxWidth: "var(--max-width)", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <h2 style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 44, fontWeight: 300,
+              color: "var(--text-primary)",
+              lineHeight: 1.1, letterSpacing: "-0.02em",
+              marginBottom: 16,
+            }}>One graph. Many applications.</h2>
+            <p style={{
+              fontSize: 16, lineHeight: 1.6,
+              color: "var(--text-secondary)",
+              maxWidth: 620, margin: "0 auto",
+            }}>
+              Phossil captures reasoning as you work. The graph is the product. Below is what becomes possible. The first surface is the flow card you just used. The others are what the same architecture enables.
+            </p>
+          </div>
+
+          <HIIArchitecture />
+
+          <div style={{ textAlign: "center", marginTop: 56 }}>
+            <a href="mailto:eric.espinel@infraction.space?subject=Phossil%20architecture%20conversation"
+              style={{
+                color: "var(--text-secondary)",
+                fontSize: 14,
+                textDecoration: "none",
+                borderBottom: "1px solid var(--border-strong)",
+                paddingBottom: 2,
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; }}
+            >Building on this kind of architecture? Talk to us →</a>
           </div>
         </div>
       </section>
@@ -368,162 +340,161 @@ function App() {
         </div>
       </section>
 
-      {/* CTA - positioned after audience tiers for maximum intent */}
-      <section style={{ padding: "60px 24px", backgroundColor: "#EFEEE9" }}>
-        <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ fontFamily: "var(--font-display)", fontSize: 36, fontWeight: 400, color: "var(--text-primary)", marginBottom: 16 }}>
-            This is real, and we're building it now
-          </h2>
-          <p style={{ fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginBottom: 32 }}>
-            We're a small team looking for people who feel this problem deeply. If the card made something click, we want to talk to you. Not to sell you anything. To build the right thing.
-          </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="https://calendar.app.google/685uNiinuYMrmzVTA" target="_blank" rel="noopener noreferrer" style={{
-              display: "inline-block", padding: "14px 28px", borderRadius: 10,
-              backgroundColor: "var(--text-primary)", color: "var(--bg)",
-              fontSize: 15, fontWeight: 600, textDecoration: "none",
-            }}>Book a 15-minute call</a>
-            <a href="#demo" style={{
-              display: "inline-block", padding: "14px 28px", borderRadius: 10,
-              border: "1px solid var(--border-strong)", backgroundColor: "rgba(255,255,255,0.6)",
-              color: "var(--text-primary)", fontSize: 15, fontWeight: 600, textDecoration: "none",
-            }}>Try the demo</a>
-          </div>
-        </div>
-      </section>
-
-      {/* Vision */}
-      <section style={{ padding: "var(--section-padding) 24px" }}>
-        <div style={{ maxWidth: 800, margin: "0 auto" }}>
+      {/* Privacy - positioned before demo to establish trust */}
+      <section style={{
+        padding: "var(--section-padding) 24px",
+        backgroundColor: "var(--bg)",
+      }}>
+        <div style={{ maxWidth: 760, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <h2 style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 44, fontWeight: 300,
+              color: "var(--text-primary)",
+              lineHeight: 1.1, letterSpacing: "-0.02em",
+              marginBottom: 16,
+            }}>Built local-first. Designed for enterprise trust.</h2>
             <p style={{
-              fontSize: 13, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase",
-              color: "var(--accent)", marginBottom: 12,
-            }}>The bigger picture</p>
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 400, color: "var(--text-primary)", marginBottom: 12 }}>
-              The flow card is just the beginning
-            </h2>
-            <p style={{ color: "var(--text-secondary)", fontSize: 16, maxWidth: 540, margin: "0 auto" }}>
-              Because Phossil captures how you think, not just what you do, the applications compound over time. Each layer requires the one before it.
+              fontSize: 16, lineHeight: 1.6,
+              color: "var(--text-secondary)",
+              maxWidth: 580, margin: "0 auto",
+            }}>
+              Your reasoning is the most sensitive data you generate. Three principles shape the architecture.
             </p>
           </div>
 
-          {/* Visual layer stack */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 0, maxWidth: 640, margin: "0 auto" }}>
-            {[
-              {
-                label: "Today",
-                title: "Cognitive continuity",
-                desc: "Never lose your train of thought. Recover from interruptions, project re-entry, and return from leave in seconds.",
-                color: "#3B82F6",
-                bg: "rgba(59,130,246,0.06)",
-                border: "rgba(59,130,246,0.15)",
-              },
-              {
-                label: "",
-                title: "Decision provenance",
-                desc: "\"Why did we build it this way?\" becomes answerable. Full reasoning chains, not just outcomes.",
-                color: "#6366F1",
-                bg: "rgba(99,102,241,0.06)",
-                border: "rgba(99,102,241,0.12)",
-              },
-              {
-                label: "",
-                title: "Knowledge transfer",
-                desc: "When someone changes roles or leaves, their mental models stay. Dead ends, reasoning, and tribal knowledge preserved.",
-                color: "#8B5CF6",
-                bg: "rgba(139,92,246,0.06)",
-                border: "rgba(139,92,246,0.12)",
-              },
-              {
-                label: "Tomorrow",
-                title: "Team intelligence",
-                desc: "Detect parallel work, diverging assumptions, and knowledge concentration risk across your team.",
-                color: "#A855F7",
-                bg: "rgba(168,85,247,0.06)",
-                border: "rgba(168,85,247,0.12)",
-              },
-              {
-                label: "",
-                title: "AI context persistence",
-                desc: "The persistent memory layer for every AI tool. Your AI agents stop being strangers and start understanding your work.",
-                color: "#C084FC",
-                bg: "rgba(192,132,252,0.06)",
-                border: "rgba(192,132,252,0.12)",
-              },
-            ].map((layer, i) => (
-              <div key={i} style={{ position: "relative" }}>
-                {layer.label && (
-                  <div style={{
-                    fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
-                    color: layer.color, marginBottom: 8, paddingLeft: 16,
-                  }}>{layer.label}</div>
-                )}
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 16,
-                  padding: "20px 24px",
-                  backgroundColor: layer.bg,
-                  border: `1px solid ${layer.border}`,
-                  borderBottom: i < 4 ? "none" : `1px solid ${layer.border}`,
-                  borderRadius: i === 0 ? "12px 12px 0 0" : i === 4 ? "0 0 12px 12px" : 0,
-                }}>
-                  <div style={{
-                    width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                    backgroundColor: layer.bg,
-                    border: `1px solid ${layer.border}`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 14, fontWeight: 700, color: layer.color,
-                  }}>{i + 1}</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 16, fontWeight: 600, color: "var(--text-primary)", marginBottom: 2 }}>{layer.title}</div>
-                    <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.5 }}>{layer.desc}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p style={{
-            textAlign: "center", fontSize: 13, color: "var(--text-tertiary)", marginTop: 20,
-            fontStyle: "italic",
+          <ol style={{
+            listStyle: "none", padding: 0, margin: 0,
+            display: "flex", flexDirection: "column", gap: 32,
+            counterReset: "principle",
           }}>
-            Each layer requires the one before it. You can't have decision provenance without capture. You can't have team intelligence without individual graphs.
-          </p>
+            {[
+              "Raw behavioral data stays on your device. Synthesis happens locally. Nothing about how you actually work is sent to a cloud you don't control.",
+              "The cloud layer is optional and opt-in. When it's used, it processes derived signals only. Summaries and patterns, not raw capture.",
+              "Self-hosting is the path for organizations with stricter requirements. Local-first is the foundation that makes that path possible.",
+            ].map((text, i) => (
+              <li key={i} style={{
+                display: "grid",
+                gridTemplateColumns: "auto 1fr",
+                gap: 24, alignItems: "start",
+              }}>
+                <span style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: 36, fontWeight: 300,
+                  color: "var(--accent)",
+                  lineHeight: 1, letterSpacing: "-0.02em",
+                  minWidth: 36,
+                }}>{i + 1}</span>
+                <p style={{
+                  fontSize: 16, lineHeight: 1.65,
+                  color: "var(--text-primary)",
+                  margin: 0, paddingTop: 4,
+                }}>{text}</p>
+              </li>
+            ))}
+          </ol>
+
+          <div style={{ textAlign: "center", marginTop: 56 }}>
+            <a href="mailto:eric.espinel@infraction.space?subject=Phossil%20enterprise%20data%20requirements"
+              style={{
+                color: "var(--text-secondary)",
+                fontSize: 14,
+                textDecoration: "none",
+                borderBottom: "1px solid var(--border-strong)",
+                paddingBottom: 2,
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; }}
+            >Have stricter data requirements? Let's talk →</a>
+          </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section style={{ padding: "var(--section-padding) 24px" }}>
-        <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 400, color: "var(--text-primary)", marginBottom: 16 }}>
-            Stop rebuilding context that shouldn't have been lost
-          </h2>
-          <p style={{ fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginBottom: 32 }}>
-            We're looking for people who feel this problem every day. If something on this page resonated, let's talk about building it together.
+      {/* Where we are */}
+      <section style={{
+        padding: "var(--section-padding) 24px",
+        backgroundColor: "var(--bg)",
+      }}>
+        <div style={{
+          maxWidth: 640,
+          margin: "0 auto",
+          textAlign: "center",
+        }}>
+          <h2 style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 44, fontWeight: 300,
+            color: "var(--text-primary)",
+            lineHeight: 1.1,
+            letterSpacing: "-0.02em",
+            marginBottom: 32,
+          }}>Where we are.</h2>
+
+          <p style={{
+            fontSize: 17,
+            lineHeight: 1.65,
+            color: "var(--text-secondary)",
+            marginBottom: 36,
+          }}>
+            We're pre-build. The recovery card demo above runs on synthetic data while we validate the concept with design partners. The architecture widget shows what we're building toward. If your work depends on context you can't afford to lose, we want to talk.
           </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="https://calendar.app.google/685uNiinuYMrmzVTA" target="_blank" rel="noopener noreferrer" style={{
-              display: "inline-block", padding: "14px 28px", borderRadius: 10,
-              backgroundColor: "var(--text-primary)", color: "var(--bg)",
-              fontSize: 15, fontWeight: 600, textDecoration: "none",
-            }}>Book a call</a>
-            <a href="#demo" style={{
-              display: "inline-block", padding: "14px 28px", borderRadius: 10,
-              border: "1px solid var(--border-strong)", backgroundColor: "var(--bg-elevated)",
-              color: "var(--text-primary)", fontSize: 15, fontWeight: 600, textDecoration: "none",
-            }}>Try the demo</a>
-          </div>
+
+          <div style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 18,
+            fontStyle: "italic",
+            color: "var(--text-primary)",
+            marginBottom: 36,
+            letterSpacing: "-0.01em",
+          }}>Eric, founder</div>
+
+          <a href="https://calendar.app.google/685uNiinuYMrmzVTA" target="_blank" rel="noopener noreferrer"
+            style={{
+              display: "inline-block",
+              padding: "14px 32px",
+              borderRadius: 999,
+              backgroundColor: "var(--accent)",
+              color: "var(--bg)",
+              fontSize: 15,
+              fontWeight: 600,
+              textDecoration: "none",
+              transition: "opacity 0.15s ease",
+            }}
+          >Book a conversation →</a>
         </div>
       </section>
 
       {/* Footer */}
       <footer style={{
-        padding: "32px 24px", borderTop: "1px solid var(--border)",
-        textAlign: "center",
+        padding: "48px 24px",
+        backgroundColor: "var(--bg)",
+        borderTop: "1px solid var(--border)",
       }}>
-        <p style={{ color: "var(--text-tertiary)", fontSize: 13 }}>
-          Phossil · Cognitive infrastructure for knowledge work · Local-first by design · Built in Utah
-        </p>
+        <div style={{
+          maxWidth: "var(--max-width)",
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 24,
+        }}>
+          <span style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 20,
+            fontWeight: 500,
+            color: "var(--text-primary)",
+            letterSpacing: "-0.02em",
+          }}>Phossil</span>
+          <span style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            color: "var(--text-tertiary)",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+          }}>Local-first · Built in Utah · © 2026</span>
+        </div>
       </footer>
     </div>
   );
