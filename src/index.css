@@ -9,25 +9,19 @@
   --text-tertiary: #5a606d;
   --accent: #e6b15c;
   --accent-cyan: #6ab6c4;
-  --accent-soft: rgba(230, 177, 92, 0.08);
-  --accent-hover: rgba(230, 177, 92, 0.14);
-  --border: rgba(236, 229, 216, 0.09);
-  --border-strong: rgba(236, 229, 216, 0.18);
-  --card-bg: #11151c;
-  --card-text: #ece5d8;
-  --card-secondary: #9aa0ab;
-  --card-border: rgba(236, 229, 216, 0.09);
-  --success: #84c987;
-  --success-soft: rgba(132, 201, 135, 0.08);
-  --warning: #d97b8a;
-  --error: #d97b8a;
-
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'Geist', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
-
+  --border: rgba(236,229,216,0.09);
+  --border-strong: rgba(236,229,216,0.18);
   --max-width: 1080px;
   --section-padding: 120px;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* preserved for src/components/Demo.tsx (off-limits per instructions) */
+  --accent-soft: rgba(230,177,92,0.08);
+  --success: #84c987;
+  --success-soft: rgba(132,201,135,0.08);
+  --error: #d97b8a;
 }
 
 * {

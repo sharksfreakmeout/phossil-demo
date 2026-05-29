@@ -1,15 +1,176 @@
 import Demo from "./components/Demo";
-import HIIArchitecture from "./components/HIIArchitecture";
+import LivingGraph from "./components/LivingGraph";
+import { useState, useEffect } from "react";
+
+interface Beat {
+  verb: string;
+  word: string;
+  your?: boolean;
+  work: string;
+  team: string;
+  org: string;
+}
+
+const BEATS: Beat[] = [
+  { verb: "remembers", word: "reasoning", your: true,
+    work: "why you ruled out the other options, not just the one you shipped.",
+    team: "why the call was made, so no one reopens it from scratch.",
+    org: "the reasoning behind decisions no one is left to explain." },
+  { verb: "remembers", word: "what you knew",
+    work: "what you knew at the time, when you need to explain the call later.",
+    team: "what the team learned the hard way, even after the people leave.",
+    org: "what took years to learn and would take years to learn again." },
+  { verb: "protects", word: "focus", your: true,
+    work: "drop back into deep focus fast, instead of rebuilding it every time.",
+    team: "keep the team in flow, not in catch-up.",
+    org: "put the company's attention where it actually matters." },
+  { verb: "works with", word: "energy", your: true,
+    work: "do deep work when you're in flow, and pick up gently when you're not.",
+    team: "see the team's real workload, before good people burn out.",
+    org: "protect the company's focus as a resource, not just its time." },
+  { verb: "remembers", word: "how your thinking changed",
+    work: "see how you got to today's answer, so you don't relearn it tomorrow.",
+    team: "watch the team's understanding sharpen, instead of starting over each time.",
+    org: "see how the strategy actually shifted, not the story told after the fact." },
+  { verb: "remembers", word: "how it all connects",
+    work: "find the thinking that already solves the problem in front of you.",
+    team: "surface the link between two people's work that neither of them saw.",
+    org: "catch two teams solving the same problem before you pay for it twice." },
+];
+
+const COG_MODES = [
+  { label: "WHEN YOU MAKE",        text: "the reasoning behind what you built, not just the thing you shipped." },
+  { label: "WHEN YOU DECIDE",      text: "what you weighed, what you ruled out, and why you landed where you did." },
+  { label: "WHEN YOU COORDINATE",  text: "the thread of who's doing what and why, without the status meeting." },
+  { label: "WHEN YOU INVESTIGATE", text: "what you've already checked, what you ruled out, where the trail went cold." },
+  { label: "WHEN YOU SYNTHESIZE",  text: "how the pieces connected into the conclusion you reached." },
+  { label: "WHEN YOU COUNSEL",     text: "the reasoning you gave, so your advice holds up when someone acts on it later." },
+];
+
+const EYEBROW: React.CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  fontSize: 11,
+  color: "var(--accent)",
+  letterSpacing: "0.14em",
+  textTransform: "uppercase",
+  marginBottom: 20,
+};
+
+const H2: React.CSSProperties = {
+  fontFamily: "var(--font-display)",
+  fontSize: 38,
+  fontWeight: 400,
+  color: "var(--text-primary)",
+  lineHeight: 1.15,
+  letterSpacing: "-0.02em",
+  marginBottom: 28,
+};
+
+const HERO_HOLD_MS = 6500;
+const HERO_OUT_MS = 400;
+const HERO_IN_MS = 700;
+const HERO_STAGGER_MS = 80;
+const HERO_OUT_WAIT_MS = HERO_OUT_MS + HERO_STAGGER_MS * 3; // 640: longest cascade out
+
+type HeroVis = "in" | "out" | "prep";
 
 function App() {
+  const [beatIdx, setBeatIdx] = useState(0);
+  const [vis, setVis] = useState<HeroVis>("in");
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    if (reducedMotion) {
+      // Instant swap, no fade, still cycles
+      const id = window.setInterval(() => {
+        setBeatIdx((prev) => (prev + 1) % BEATS.length);
+      }, HERO_HOLD_MS);
+      return () => {
+        mounted = false;
+        window.clearInterval(id);
+      };
+    }
+
+    const timers: number[] = [];
+    function tick() {
+      if (!mounted) return;
+      timers.push(window.setTimeout(() => {
+        if (!mounted) return;
+        setVis("out");
+        timers.push(window.setTimeout(() => {
+          if (!mounted) return;
+          setBeatIdx((prev) => (prev + 1) % BEATS.length);
+          setVis("prep");
+          // Two rAFs so the browser paints the prep state before "in" triggers,
+          // letting the transform/opacity transition kick in cleanly.
+          requestAnimationFrame(() => {
+            if (!mounted) return;
+            requestAnimationFrame(() => {
+              if (!mounted) return;
+              setVis("in");
+              tick();
+            });
+          });
+        }, HERO_OUT_WAIT_MS));
+      }, HERO_HOLD_MS));
+    }
+    tick();
+
+    return () => {
+      mounted = false;
+      timers.forEach((id) => window.clearTimeout(id));
+    };
+  }, [reducedMotion]);
+
+  const b = BEATS[beatIdx];
+
+  function heroFade(staggerMs: number): React.CSSProperties {
+    if (reducedMotion) {
+      return { opacity: 1 };
+    }
+    if (vis === "in") {
+      return {
+        opacity: 1,
+        transform: "translateY(0)",
+        transition: `opacity ${HERO_IN_MS}ms ease-in-out ${staggerMs}ms, transform ${HERO_IN_MS}ms ease-in-out ${staggerMs}ms`,
+        willChange: "opacity, transform",
+      };
+    }
+    if (vis === "out") {
+      return {
+        opacity: 0,
+        transition: `opacity ${HERO_OUT_MS}ms ease-in-out ${staggerMs}ms`,
+        willChange: "opacity",
+      };
+    }
+    // "prep": invisible + pre-drift, no transition so the next "in" can animate
+    return {
+      opacity: 0,
+      transform: "translateY(6px)",
+      transition: "none",
+    };
+  }
+
   return (
     <div>
-      {/* Nav */}
+      {/* NAV */}
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
         padding: "16px 24px",
-        backgroundColor: "rgba(10, 13, 18, 0.85)",
+        backgroundColor: "rgba(10,13,18,0.85)",
         backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
         borderBottom: "1px solid var(--border)",
       }}>
         <div style={{
@@ -18,438 +179,87 @@ function App() {
         }}>
           <span style={{
             fontFamily: "var(--font-display)",
-            fontSize: 22, fontWeight: 500,
+            fontSize: 20, fontWeight: 500,
             color: "var(--text-primary)",
             letterSpacing: "-0.02em",
           }}>Phossil</span>
-          <a href="#demo" style={{
+          <a href="mailto:teamphossil@gmail.com" style={{
             padding: "8px 18px", borderRadius: 999,
-          backgroundColor: "var(--text-primary)", color: "var(--bg)",
+            backgroundColor: "var(--accent)", color: "var(--bg)",
             fontSize: 13, fontWeight: 500, textDecoration: "none",
-          }}>See your flow card</a>
+          }}>Become a design partner</a>
         </div>
       </nav>
 
-      {/* Hero */}
+      {/* HERO */}
       <section style={{
-        paddingTop: 160, paddingBottom: "var(--section-padding)",
+        paddingTop: 140, paddingBottom: 96,
         paddingLeft: 24, paddingRight: 24,
-        textAlign: "center",
-      }}>
-        <div style={{ maxWidth: 820, margin: "0 auto" }}>
-          <h1 style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 60, fontWeight: 300,
-            lineHeight: 1.05,
-            marginBottom: 32,
-            letterSpacing: "-0.025em",
-          }}>
-            <span style={{
-              display: "block",
-              color: "var(--text-secondary)",
-            }}>Software remembers your files.</span>
-            <span style={{
-              display: "block",
-              color: "var(--text-primary)",
-            }}>Phossil remembers your thinking.</span>
-          </h1>
-          <p style={{
-            fontSize: 17, lineHeight: 1.65,
-            color: "var(--text-secondary)",
-            maxWidth: 680, margin: "0 auto 36px",
-          }}>
-            The reasoning behind your work — what you were testing, why you decided, what you were about to do next — usually vanishes the moment context shifts. Phossil captures it across your apps, files, and conversations, with strict privacy. Today's first surface is the flow card you'll see below. The graph it reads from is the architecture behind team alignment, institutional memory, and giving AI the intent behind your work.
-          </p>
-          <a href="#demo" style={{
-            display: "inline-block",
-            padding: "14px 32px", borderRadius: 999,
-            backgroundColor: "var(--accent)", color: "var(--bg)",
-            fontSize: 15, fontWeight: 600, textDecoration: "none",
-            transition: "opacity 0.15s ease",
-          }}>See what it looks like for your role</a>
-        </div>
-      </section>
-
-      {/* Problem Stats */}
-      <section style={{
-        padding: "80px 24px",
-        backgroundColor: "var(--bg-elevated)",
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-      }}>
-        <div style={{ maxWidth: 880, margin: "0 auto" }}>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: 40, textAlign: "center",
-          }}>
-            <div>
-              <div style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 48, fontWeight: 300,
-                color: "var(--text-primary)",
-                marginBottom: 10,
-                letterSpacing: "-0.02em",
-                whiteSpace: "nowrap",
-              }}>Every 2 min</div>
-              <p style={{
-                color: "var(--text-secondary)",
-                fontSize: 14, lineHeight: 1.55,
-              }}>An interruption hits during core work hours</p>
-            </div>
-            <div>
-              <div style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 48, fontWeight: 300,
-                color: "var(--text-primary)",
-                marginBottom: 10,
-                letterSpacing: "-0.02em",
-                whiteSpace: "nowrap",
-              }}>23 min</div>
-              <p style={{
-                color: "var(--text-secondary)",
-                fontSize: 14, lineHeight: 1.55,
-              }}>To fully refocus after a single interruption</p>
-            </div>
-            <div>
-              <div style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 48, fontWeight: 300,
-                color: "var(--text-primary)",
-                marginBottom: 10,
-                letterSpacing: "-0.02em",
-                whiteSpace: "nowrap",
-              }}>275/day</div>
-              <p style={{
-                color: "var(--text-secondary)",
-                fontSize: 14, lineHeight: 1.55,
-              }}>Meetings, emails, and messages competing for your attention</p>
-            </div>
-          </div>
-          <p style={{
-            textAlign: "center",
-            fontSize: 11,
-            color: "var(--text-tertiary)",
-            marginTop: 32,
-            fontStyle: "italic",
-            fontFamily: "var(--font-mono)",
-          }}>
-            Sources: Microsoft 2025 Work Trend Index (n=31,000 workers, 31 countries) · Gloria Mark, <em style={{ fontFamily: "var(--font-display)" }}>Attention Span</em> (Hanover Square Press, 2023)
-          </p>
-        </div>
-      </section>
-
-      {/* Demo */}
-      <section id="demo" style={{
-        padding: "var(--section-padding) 24px",
-        backgroundColor: "var(--bg-elevated)",
-      }}>
-        <div style={{ maxWidth: "var(--max-width)", margin: "0 auto" }}>
-          {/* Heading block */}
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <div style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 11, fontWeight: 500,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: "var(--accent)",
-              marginBottom: 16,
-            }}>The Wedge</div>
-            <h2 style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 44, fontWeight: 300,
-              color: "var(--text-primary)",
-              lineHeight: 1.1, letterSpacing: "-0.02em",
-              marginBottom: 16,
-            }}>The first surface is the flow card.</h2>
-            <p style={{
-              fontSize: 16, lineHeight: 1.6,
-              color: "var(--text-secondary)",
-              maxWidth: 640, margin: "0 auto",
-            }}>
-              It reconstructs your thinking after an interruption. Hypotheses, stuck points, and where to pick up. The flow card reads from a graph of your reasoning, captured automatically across your apps, files, and conversations.
-            </p>
-          </div>
-
-          {/* Demo wrapper — subtle dark card */}
-          <div style={{
-            backgroundColor: "var(--bg)",
-            border: "1px solid var(--border-strong)",
-            borderRadius: 16,
-            padding: 48,
-            display: "flex",
-            justifyContent: "center",
-            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.4)",
-          }}>
-            <Demo />
-          </div>
-        </div>
-      </section>
-
-      {/* HII Architecture */}
-      <section style={{
-        padding: "var(--section-padding) 24px",
-        backgroundColor: "var(--bg)",
-      }}>
-        <div style={{ maxWidth: "var(--max-width)", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <h2 style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 44, fontWeight: 300,
-              color: "var(--text-primary)",
-              lineHeight: 1.1, letterSpacing: "-0.02em",
-              marginBottom: 16,
-            }}>One graph. Many applications.</h2>
-            <p style={{
-              fontSize: 16, lineHeight: 1.6,
-              color: "var(--text-secondary)",
-              maxWidth: 620, margin: "0 auto",
-            }}>
-              Phossil captures reasoning as you work. The graph is the product. Below is what becomes possible. The first surface is the flow card you just used. The others are what the same architecture enables.
-            </p>
-          </div>
-
-          <HIIArchitecture />
-
-          <div style={{ textAlign: "center", marginTop: 56 }}>
-            <a href="mailto:eric.espinel@infraction.space?subject=Phossil%20architecture%20conversation"
-              style={{
-                color: "var(--text-secondary)",
-                fontSize: 14,
-                textDecoration: "none",
-                borderBottom: "1px solid var(--border-strong)",
-                paddingBottom: 2,
-                transition: "color 0.15s ease",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; }}
-            >Building on this kind of architecture? Talk to us →</a>
-          </div>
-        </div>
-      </section>
-
-      {/* Who Phossil is for - three audience tiers */}
-      <section style={{ padding: "var(--section-padding) 24px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <p style={{
-              fontSize: 13, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase",
-              color: "var(--accent)", marginBottom: 12,
-            }}>Who it's for</p>
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 400, color: "var(--text-primary)", marginBottom: 12 }}>
-              One system. Three layers of value.
-            </h2>
-            <p style={{ color: "var(--text-secondary)", fontSize: 16, maxWidth: 540, margin: "0 auto" }}>
-              Phossil starts as a personal tool and compounds into organizational infrastructure. Each layer builds on the one before it.
-            </p>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-
-            {/* For You */}
-            <div style={{
-              display: "flex", alignItems: "flex-start", gap: 28,
-              padding: "32px 36px", borderRadius: 16,
-              backgroundColor: "rgba(59,130,246,0.04)",
-              border: "1px solid rgba(59,130,246,0.12)",
-            }}>
-              <div style={{
-                width: 64, height: 64, borderRadius: 16, flexShrink: 0,
-                background: "linear-gradient(135deg, #E8F4FD, #D1E9FA)",
-                border: "1px solid rgba(59,130,246,0.15)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                  <circle cx="14" cy="10" r="5" stroke="#3B82F6" strokeWidth="1.5" fill="rgba(59,130,246,0.1)"/>
-                  <path d="M4 24c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="#3B82F6" strokeWidth="1.5" fill="none"/>
-                </svg>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3B82F6", marginBottom: 6 }}>For you</div>
-                <h3 style={{ fontSize: 22, fontWeight: 500, color: "var(--text-primary)", marginBottom: 10, lineHeight: 1.3 }}>Your train of thought, rebuilt in seconds</h3>
-                <p style={{ fontSize: 15, lineHeight: 1.65, color: "var(--text-secondary)", margin: 0 }}>
-                  You know the moment. You sit down after a meeting, a break, a Monday morning, and stare at your screen trying to remember where you were. What file. Which thread. What you were actually trying to figure out. You check Slack, scan your tabs, skim your notes. Fifteen minutes later, you're still piecing it together. Phossil gives you a single card that answers: what were you thinking, what changed while you were away, and what to do next. No logging. No journaling. No input from you at all.
-                </p>
-              </div>
-            </div>
-
-            {/* For Your Team */}
-            <div style={{
-              display: "flex", alignItems: "flex-start", gap: 28,
-              padding: "32px 36px", borderRadius: 16,
-              backgroundColor: "rgba(99,102,241,0.04)",
-              border: "1px solid rgba(99,102,241,0.12)",
-            }}>
-              <div style={{
-                width: 64, height: 64, borderRadius: 16, flexShrink: 0,
-                background: "linear-gradient(135deg, #EDE9FE, #DDD6FE)",
-                border: "1px solid rgba(99,102,241,0.15)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                  <circle cx="10" cy="9" r="4" stroke="#6366F1" strokeWidth="1.5" fill="rgba(99,102,241,0.1)"/>
-                  <circle cx="20" cy="9" r="4" stroke="#6366F1" strokeWidth="1.5" fill="rgba(99,102,241,0.1)"/>
-                  <path d="M2 23c0-4.418 3.582-8 8-8" stroke="#6366F1" strokeWidth="1.5" fill="none"/>
-                  <path d="M18 15c4.418 0 8 3.582 8 8" stroke="#6366F1" strokeWidth="1.5" fill="none"/>
-                  <path d="M10 15h8" stroke="#6366F1" strokeWidth="1.5" strokeDasharray="2 2"/>
-                </svg>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6366F1", marginBottom: 6 }}>For your team</div>
-                <h3 style={{ fontSize: 22, fontWeight: 500, color: "var(--text-primary)", marginBottom: 10, lineHeight: 1.3 }}>When someone leaves, what do they take with them?</h3>
-                <p style={{ fontSize: 15, lineHeight: 1.65, color: "var(--text-secondary)", margin: 0 }}>
-                  Every team has invisible knowledge: why that architecture decision was made, what was tried and abandoned, who holds the context on the system nobody else understands. Today, that knowledge lives in one person's head. When they go on leave, change roles, or quit, it walks out the door. Phossil captures reasoning, not just activity. Decision chains. Mental models. The "why" behind the "what." So when your team changes, the thinking doesn't disappear.
-                </p>
-              </div>
-            </div>
-
-            {/* For Your Organization */}
-            <div style={{
-              display: "flex", alignItems: "flex-start", gap: 28,
-              padding: "32px 36px", borderRadius: 16,
-              backgroundColor: "rgba(139,92,246,0.04)",
-              border: "1px solid rgba(139,92,246,0.12)",
-            }}>
-              <div style={{
-                width: 64, height: 64, borderRadius: 16, flexShrink: 0,
-                background: "linear-gradient(135deg, #F3EEFF, #E8DFFE)",
-                border: "1px solid rgba(139,92,246,0.15)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                  <rect x="4" y="12" width="8" height="12" rx="1" stroke="#8B5CF6" strokeWidth="1.5" fill="rgba(139,92,246,0.1)"/>
-                  <rect x="16" y="6" width="8" height="18" rx="1" stroke="#8B5CF6" strokeWidth="1.5" fill="rgba(139,92,246,0.1)"/>
-                  <path d="M12 18h4" stroke="#8B5CF6" strokeWidth="1.5"/>
-                  <line x1="7" y1="16" x2="9" y2="16" stroke="#8B5CF6" strokeWidth="1" opacity="0.5"/>
-                  <line x1="7" y1="19" x2="9" y2="19" stroke="#8B5CF6" strokeWidth="1" opacity="0.5"/>
-                  <line x1="19" y1="10" x2="21" y2="10" stroke="#8B5CF6" strokeWidth="1" opacity="0.5"/>
-                  <line x1="19" y1="13" x2="21" y2="13" stroke="#8B5CF6" strokeWidth="1" opacity="0.5"/>
-                  <line x1="19" y1="16" x2="21" y2="16" stroke="#8B5CF6" strokeWidth="1" opacity="0.5"/>
-                </svg>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#8B5CF6", marginBottom: 6 }}>For your organization</div>
-                <h3 style={{ fontSize: 22, fontWeight: 500, color: "var(--text-primary)", marginBottom: 10, lineHeight: 1.3 }}>Stop paying for the same lost hour, 10,000 times</h3>
-                <p style={{ fontSize: 15, lineHeight: 1.65, color: "var(--text-secondary)", margin: 0 }}>
-                  Microsoft found that knowledge workers are interrupted every 2 minutes. Each interruption costs 25 minutes of recovery. 80% of your workforce says they don't have the time or energy to do their job effectively. This isn't a motivation problem. It's a systems problem. Phossil gives your people faster re-entry into meaningful work, positioned as a benefit they actually want. And it gives your organization aggregated insight into where context breaks down, without ever monitoring individuals. This is the opposite of surveillance. It's infrastructure that treats your people with more dignity, not less.
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Privacy - positioned before demo to establish trust */}
-      <section style={{
-        padding: "var(--section-padding) 24px",
-        backgroundColor: "var(--bg)",
-      }}>
-        <div style={{ maxWidth: 760, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <h2 style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 44, fontWeight: 300,
-              color: "var(--text-primary)",
-              lineHeight: 1.1, letterSpacing: "-0.02em",
-              marginBottom: 16,
-            }}>Built local-first. Designed for enterprise trust.</h2>
-            <p style={{
-              fontSize: 16, lineHeight: 1.6,
-              color: "var(--text-secondary)",
-              maxWidth: 580, margin: "0 auto",
-            }}>
-              Your reasoning is the most sensitive data you generate. Three principles shape the architecture.
-            </p>
-          </div>
-
-          <ol style={{
-            listStyle: "none", padding: 0, margin: 0,
-            display: "flex", flexDirection: "column", gap: 32,
-            counterReset: "principle",
-          }}>
-            {[
-              "Raw behavioral data stays on your device. Synthesis happens locally. Nothing about how you actually work is sent to a cloud you don't control.",
-              "The cloud layer is optional and opt-in. When it's used, it processes derived signals only. Summaries and patterns, not raw capture.",
-              "Self-hosting is the path for organizations with stricter requirements. Local-first is the foundation that makes that path possible.",
-            ].map((text, i) => (
-              <li key={i} style={{
-                display: "grid",
-                gridTemplateColumns: "auto 1fr",
-                gap: 24, alignItems: "start",
-              }}>
-                <span style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 36, fontWeight: 300,
-                  color: "var(--accent)",
-                  lineHeight: 1, letterSpacing: "-0.02em",
-                  minWidth: 36,
-                }}>{i + 1}</span>
-                <p style={{
-                  fontSize: 16, lineHeight: 1.65,
-                  color: "var(--text-primary)",
-                  margin: 0, paddingTop: 4,
-                }}>{text}</p>
-              </li>
-            ))}
-          </ol>
-
-          <div style={{ textAlign: "center", marginTop: 56 }}>
-            <a href="mailto:eric.espinel@infraction.space?subject=Phossil%20enterprise%20data%20requirements"
-              style={{
-                color: "var(--text-secondary)",
-                fontSize: 14,
-                textDecoration: "none",
-                borderBottom: "1px solid var(--border-strong)",
-                paddingBottom: 2,
-                transition: "color 0.15s ease",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; }}
-            >Have stricter data requirements? Let's talk →</a>
-          </div>
-        </div>
-      </section>
-
-      {/* Where we are */}
-      <section style={{
-        padding: "var(--section-padding) 24px",
         backgroundColor: "var(--bg)",
       }}>
         <div style={{
-          maxWidth: 640,
-          margin: "0 auto",
-          textAlign: "center",
+          maxWidth: "var(--max-width)", margin: "0 auto",
+          display: "flex", flexWrap: "wrap", gap: 48,
+          alignItems: "center",
         }}>
-          <h2 style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 44, fontWeight: 300,
-            color: "var(--text-primary)",
-            lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-            marginBottom: 32,
-          }}>Where we are.</h2>
+          {/* Left column */}
+          <div style={{ flex: "1 1 480px", minWidth: 0 }}>
+            <h1 style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(34px, 4.6vw, 46px)",
+              fontWeight: 400,
+              lineHeight: 1.1,
+              letterSpacing: "-0.02em",
+              marginBottom: 36,
+            }}>
+              <span style={{ display: "block", color: "var(--text-secondary)" }}>
+                Software remembers your files.
+              </span>
+              <span style={{ display: "block", color: "var(--text-primary)" }}>
+                <span>Phossil </span>
+                <span style={{
+                  display: "inline-block",
+                  verticalAlign: "baseline",
+                  ...heroFade(0),
+                }}>
+                  {b.verb}{b.your ? " your " : " "}
+                  <em style={{
+                    fontStyle: "italic",
+                    color: "var(--accent)",
+                    fontFamily: "var(--font-display)",
+                  }}>{b.word}</em>.
+                </span>
+              </span>
+            </h1>
 
-          <p style={{
-            fontSize: 17,
-            lineHeight: 1.65,
-            color: "var(--text-secondary)",
-            marginBottom: 36,
-          }}>
-            We're pre-build. The recovery card demo above runs on synthetic data while we validate the concept with design partners. The architecture widget shows what we're building toward. If your work depends on context you can't afford to lose, we want to talk.
-          </p>
+            {/* Audience lines */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 36 }}>
+              {[
+                { label: "FOR YOUR WORK", text: b.work },
+                { label: "FOR YOUR TEAM", text: b.team },
+                { label: "FOR YOUR ORG",  text: b.org  },
+              ].map((line, i) => (
+                <div key={i}>
+                  <div style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 11,
+                    color: "var(--accent)",
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    marginBottom: 4,
+                  }}>{line.label}</div>
+                  <div style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 16,
+                    color: "var(--text-secondary)",
+                    lineHeight: 1.5,
+                    ...heroFade((i + 1) * HERO_STAGGER_MS),
+                  }}>{line.text}</div>
+                </div>
+              ))}
+            </div>
 
-          <div style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 18,
-            fontStyle: "italic",
-            color: "var(--text-primary)",
-            marginBottom: 36,
-            letterSpacing: "-0.01em",
-          }}>Eric, founder</div>
-
-          <a href="https://calendar.app.google/685uNiinuYMrmzVTA" target="_blank" rel="noopener noreferrer"
-            style={{
+            <a href="#demo" style={{
               display: "inline-block",
               padding: "14px 32px",
               borderRadius: 999,
@@ -458,42 +268,298 @@ function App() {
               fontSize: 15,
               fontWeight: 600,
               textDecoration: "none",
-              transition: "opacity 0.15s ease",
-            }}
-          >Book a conversation →</a>
+              marginBottom: 12,
+            }}>See the flow card</a>
+            <div style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 12,
+              color: "var(--text-tertiary)",
+            }}>Pre-build. Talking to design partners now.</div>
+          </div>
+
+          {/* Right column — Living Graph */}
+          <div style={{ flex: "1 1 380px", minWidth: 0 }}>
+            <LivingGraph />
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
+      {/* SECTION 2 — THE PROBLEM */}
+      <section style={{
+        backgroundColor: "var(--bg-elevated)",
+        padding: "var(--section-padding) 24px",
+      }}>
+        <div style={{ maxWidth: 780, margin: "0 auto" }}>
+          <div style={{ textAlign: "center" }}>
+            <div style={EYEBROW}>The Problem</div>
+            <h2 style={{ ...H2, textAlign: "center" }}>The most valuable thing you produce is the thing nothing saves.</h2>
+          </div>
+          <p style={{
+            fontSize: 18, lineHeight: 1.6,
+            color: "var(--text-secondary)",
+          }}>Files get saved. Messages get logged. But the reasoning behind the work, what you intended, what you ruled out, how your understanding changed, where the real effort went, none of it is captured anywhere. It lives for a moment in working memory and then it's gone, scattered across tools or lost to the next interruption. Multiply that across a team and a company, and the result is the same every time: the work survives, the thinking behind it doesn't.</p>
+        </div>
+      </section>
+
+      {/* SECTION 3 — THE WEDGE (demo) */}
+      <section id="demo" style={{
+        backgroundColor: "var(--bg)",
+        padding: "var(--section-padding) 24px",
+      }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <div style={{ textAlign: "center" }}>
+            <div style={EYEBROW}>The First Application</div>
+            <h2 style={{ ...H2, marginBottom: 20, textAlign: "center" }}>Start with the moment you sit back down.</h2>
+            <p style={{
+              fontSize: 17, lineHeight: 1.6,
+              color: "var(--text-secondary)",
+              maxWidth: 620, margin: "0 auto",
+            }}>The flow card reconstructs where you were the instant before you got pulled away. What you were testing, what you'd ruled out, what you were about to do next. Not your open tabs. Your train of thought.</p>
+          </div>
+          <div style={{
+            backgroundColor: "var(--bg-elevated)",
+            border: "1px solid var(--border)",
+            borderRadius: 20,
+            padding: "48px 32px",
+            marginTop: 48,
+          }}>
+            <Demo />
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4 — THE ARCHITECTURE */}
+      <section style={{
+        backgroundColor: "var(--bg-elevated)",
+        padding: "var(--section-padding) 24px",
+      }}>
+        <div style={{ maxWidth: 820, margin: "0 auto" }}>
+          <div style={{ textAlign: "center" }}>
+            <div style={EYEBROW}>The Architecture</div>
+            <h2 style={{ ...H2, textAlign: "center" }}>One graph. Everything you think becomes usable.</h2>
+          </div>
+          <p style={{
+            fontSize: 17, lineHeight: 1.6,
+            color: "var(--text-secondary)",
+            maxWidth: 640,
+            margin: "0 auto",
+            marginBottom: 48,
+            textAlign: "center",
+          }}>The flow card is one application. Underneath it is a graph that captures the full texture of how work actually happens.</p>
+
+          {[
+            { label: "FOR ONE PERSON", text: "Continuity, focus, and the ability to see how you actually work." },
+            { label: "FOR A TEAM",     text: "Shared understanding, faster handoffs, and alignment that doesn't need a meeting. Federated with consent." },
+            { label: "FOR A COMPANY",  text: "Institutional memory, risk you can see coming, and a substrate AI agents can finally act on." },
+          ].map((row, i, arr) => (
+            <div key={i} style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 24,
+              padding: "28px 0",
+              alignItems: "baseline",
+              borderBottom: i < arr.length - 1 ? "1px solid var(--border)" : "none",
+            }}>
+              <div style={{
+                flex: "0 1 180px",
+                minWidth: 180,
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                color: "var(--accent)",
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+              }}>{row.label}</div>
+              <div style={{
+                flex: "1 1 320px",
+                fontFamily: "var(--font-body)",
+                fontSize: 17,
+                color: "var(--text-primary)",
+                lineHeight: 1.55,
+              }}>{row.text}</div>
+            </div>
+          ))}
+
+          <div style={{
+            fontFamily: "var(--font-display)",
+            fontStyle: "italic",
+            fontSize: 20,
+            color: "var(--text-secondary)",
+            textAlign: "center",
+            marginTop: 48,
+            letterSpacing: "-0.01em",
+          }}>Same graph. The applications multiply with the scale.</div>
+        </div>
+      </section>
+
+      {/* SECTION 5 — COGNITIVE MODES */}
+      <section style={{
+        backgroundColor: "var(--bg)",
+        padding: "var(--section-padding) 24px",
+      }}>
+        <div style={{ maxWidth: 820, margin: "0 auto" }}>
+          <h2 style={{ ...H2, textAlign: "center", marginBottom: 20 }}>Whatever kind of work you do, the thinking is what matters.</h2>
+          <p style={{
+            fontSize: 17, lineHeight: 1.6,
+            color: "var(--text-secondary)",
+            maxWidth: 620, margin: "0 auto",
+            textAlign: "center",
+          }}>Phossil doesn't care what your job title is. It works at the level underneath the job: the thinking every kind of knowledge work runs on.</p>
+
+          <div style={{ marginTop: 56, display: "flex", flexDirection: "column", gap: 20 }}>
+            {COG_MODES.map((m, i) => (
+              <div key={i} style={{
+                display: "grid",
+                gridTemplateColumns: "minmax(180px, 200px) 1fr",
+                gap: 28,
+                alignItems: "baseline",
+              }}>
+                <div style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11,
+                  color: "var(--accent)",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                }}>{m.label}</div>
+                <div style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 16,
+                  color: "var(--text-primary)",
+                  lineHeight: 1.55,
+                }}>{m.text}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{
+            fontFamily: "var(--font-display)",
+            fontStyle: "italic",
+            fontSize: 20,
+            color: "var(--text-secondary)",
+            textAlign: "center",
+            marginTop: 56,
+            letterSpacing: "-0.01em",
+          }}>Six ways of working. One thing underneath all of them.</div>
+        </div>
+      </section>
+
+      {/* SECTION 6 — THE CATEGORY */}
+      <section style={{
+        backgroundColor: "var(--bg-elevated)",
+        padding: "var(--section-padding) 24px",
+      }}>
+        <div style={{ maxWidth: 760, margin: "0 auto" }}>
+          <div style={EYEBROW}>The Category</div>
+          <h2 style={H2}>This is infrastructure for how people think.</h2>
+          <p style={{
+            fontSize: 17, lineHeight: 1.6,
+            color: "var(--text-secondary)",
+            maxWidth: 680,
+            marginBottom: 40,
+          }}>Phossil is building a new layer: <span style={{
+            fontStyle: "italic",
+            fontFamily: "var(--font-display)",
+            color: "var(--accent)",
+          }}>Human Cognitive Infrastructure</span>. The substrate underneath your work, the reasoning, intent, and judgment every piece of it is built on, captured as it happens and owned by the person who produced it.</p>
+
+          <div style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 20,
+          }}>
+            {[
+              { label: "SOVEREIGNTY", text: "Your cognitive graph is yours. Capture and synthesis happen on your device. Anything that leaves does so on your terms, at the scale you choose. Local-first is the foundation, not a feature." },
+              { label: "THE HUMAN API", text: "Once your reasoning is structured and consent-gated, you can grant access to it deliberately. A teammate. A tool. An AI agent that acts on what you mean instead of guessing. The graph becomes a protocol." },
+            ].map((card, i) => (
+              <div key={i} style={{
+                flex: "1 1 320px",
+                minWidth: 0,
+                backgroundColor: "var(--bg-subtle)",
+                border: "1px solid var(--border)",
+                borderRadius: 14,
+                padding: 28,
+              }}>
+                <div style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11,
+                  color: "var(--accent-cyan)",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  marginBottom: 12,
+                }}>{card.label}</div>
+                <div style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 15,
+                  color: "var(--text-secondary)",
+                  lineHeight: 1.6,
+                }}>{card.text}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{
+            fontFamily: "var(--font-display)",
+            fontStyle: "italic",
+            fontSize: 22,
+            color: "var(--text-primary)",
+            lineHeight: 1.3,
+            letterSpacing: "-0.01em",
+            textAlign: "center",
+            maxWidth: 680,
+            margin: "40px auto 0",
+          }}>Software has always remembered what you produced. Phossil remembers how, and hands that power back to you.</div>
+        </div>
+      </section>
+
+      {/* SECTION 7 — WHERE WE ARE */}
+      <section style={{
+        backgroundColor: "var(--bg)",
+        padding: "var(--section-padding) 24px",
+      }}>
+        <div style={{ maxWidth: 680, margin: "0 auto" }}>
+          <h2 style={{ ...H2, textAlign: "center", marginBottom: 28 }}>Where we are.</h2>
+          <p style={{
+            fontSize: 17, lineHeight: 1.65,
+            color: "var(--text-secondary)",
+            marginBottom: 32,
+          }}>We're pre-build. The flow card demo above runs on synthetic data while we validate the concept with design partners. The architecture is what we're building toward. If your work depends on context you can't afford to lose, we want to talk.</p>
+          <div style={{ textAlign: "center" }}>
+            <a href="mailto:teamphossil@gmail.com" style={{
+              display: "inline-block",
+              padding: "14px 32px",
+              borderRadius: 999,
+              backgroundColor: "var(--accent)",
+              color: "var(--bg)",
+              fontSize: 15,
+              fontWeight: 600,
+              textDecoration: "none",
+              marginTop: 32,
+            }}>Become a design partner</a>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
       <footer style={{
-        padding: "48px 24px",
         backgroundColor: "var(--bg)",
         borderTop: "1px solid var(--border)",
+        padding: "48px 24px",
       }}>
         <div style={{
-          maxWidth: "var(--max-width)",
-          margin: "0 auto",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 24,
+          maxWidth: "var(--max-width)", margin: "0 auto",
+          display: "flex", flexWrap: "wrap", gap: 16,
+          alignItems: "center", justifyContent: "space-between",
         }}>
           <span style={{
             fontFamily: "var(--font-display)",
-            fontSize: 20,
-            fontWeight: 500,
+            fontSize: 18,
             color: "var(--text-primary)",
-            letterSpacing: "-0.02em",
           }}>Phossil</span>
           <span style={{
             fontFamily: "var(--font-mono)",
             fontSize: 11,
             color: "var(--text-tertiary)",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-          }}>Local-first · Built in Utah · © 2026</span>
+            letterSpacing: "0.1em",
+          }}>Local-first by design. Your graph stays yours.</span>
         </div>
       </footer>
     </div>
