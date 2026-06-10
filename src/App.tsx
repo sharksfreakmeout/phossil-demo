@@ -232,6 +232,17 @@ function App() {
               </span>
             </h1>
 
+            <p style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 17,
+              lineHeight: 1.55,
+              color: "var(--text-secondary)",
+              maxWidth: 520,
+              marginBottom: 28,
+            }}>
+              It runs quietly on your computer and captures the reasoning behind your work as you go, <span style={{ color: "var(--text-primary)" }}>without you writing any of it down</span>.
+            </p>
+
             {/* Audience lines */}
             <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 36 }}>
               {[
@@ -314,7 +325,7 @@ function App() {
               fontSize: 17, lineHeight: 1.6,
               color: "var(--text-secondary)",
               maxWidth: 620, margin: "0 auto",
-            }}>The flow card reconstructs where you were the instant before you got pulled away. What you were testing, what you'd ruled out, what you were about to do next. Not your open tabs. Your train of thought.</p>
+            }}>The flow card rebuilds your train of thought from the instant before you got pulled away: what you were testing, what you'd ruled out, where you stopped. Then it shows what changed while you were gone, and what to pick up next. Not your open tabs. The actual thread.</p>
           </div>
           <div style={{
             backgroundColor: "var(--bg-elevated)",
@@ -467,7 +478,7 @@ function App() {
             gap: 20,
           }}>
             {[
-              { label: "SOVEREIGNTY", text: "Your cognitive graph is yours. Capture and synthesis happen on your device. Anything that leaves does so on your terms, at the scale you choose. Local-first is the foundation, not a feature." },
+              { label: "SOVEREIGNTY", text: "Your cognitive graph lives on your device. The raw substrate never leaves it, by architecture, not policy. What gets shared is derived and deliberate: a teammate or an organization sees conclusions, never your keystroke-level reasoning, and your personal work always stays yours. Local-first is the foundation, not a feature." },
               { label: "THE HUMAN API", text: "Once your reasoning is structured and consent-gated, you can grant access to it deliberately. A teammate. A tool. An AI agent that acts on what you mean instead of guessing. The graph becomes a protocol." },
             ].map((card, i) => (
               <div key={i} style={{
