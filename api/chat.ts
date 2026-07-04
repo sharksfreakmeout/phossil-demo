@@ -45,6 +45,7 @@ Rules:
       body: JSON.stringify({
         model: "claude-sonnet-5",
         max_tokens: 300,
+        thinking: { type: "disabled" },
         system: systemPrompt,
         messages: [{ role: "user", content: question }],
       }),

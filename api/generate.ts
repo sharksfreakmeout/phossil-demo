@@ -95,7 +95,8 @@ Respond with ONLY the JSON object.`;
       },
       body: JSON.stringify({
         model: "claude-sonnet-5",
-        max_tokens: 4096,
+        max_tokens: 8192,
+        thinking: { type: "adaptive" },
         system: SYSTEM_PROMPT,
         messages: [{ role: "user", content: userPrompt }],
       }),
@@ -107,7 +108,8 @@ Respond with ONLY the JSON object.`;
       return res.status(500).json({ error: data.error.message });
     }
 
-    const text = data.content[0].text;
+    const textBlock = data.content.find((b: { type: string }) => b.type === "text");
+    const text = textBlock?.text ?? "";
     const cleaned = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const card = JSON.parse(cleaned);
 
